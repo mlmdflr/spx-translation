@@ -6,8 +6,7 @@
 
 ### ctrl+e
 
-隐藏 显示快速 类似于老板键...
-
+隐藏 显示 类似于老板键...
 
 
 ### ctrl+w
@@ -21,3 +20,8 @@
 ### 点击此处切换老婆
 
 ![image-20211026145051247](README.assets/image-20211026145051247.png)
+
+
+## 下载
+
+https://github.com/mlmdflr/xps-google-translation/releases/download/v1.0.2/xps-google-translate_Setup_1.0.2.exe
