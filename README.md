@@ -24,4 +24,4 @@
 
 ## 下载
 
-https://github.com/mlmdflr/xps-google-translation/releases/download/v1.0.2/xps-google-translate_Setup_1.0.2.exe
+https://github.com/mlmdflr/xps-google-translation/releases/download/v1.1.0/xps-google-translate_Setup_1.1.0.exe
