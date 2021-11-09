@@ -1,27 +1,33 @@
 # xps-google-translation
 
+
+
 ## 快捷键
-
-
 
 ### ctrl+e
 
-隐藏 显示 类似于老板键...
-
+**隐藏 显示 类似于老板键...**
 
 ### ctrl+w
 
-设置窗口的调出
+**设置窗口的调起**
 
-## 设置老婆规则
+## 设置页面
 
-爬取的是  https://wallhaven.cc/  网站上的图片,设置关键字时务必检查其是否能在网站搜到图片,搜不到则无法设置背景图
+![image-20211109174954158](README.assets/image-20211109174954158.png)
 
-### 点击此处切换老婆
+不设置默认进入则启动时候选择如下
 
-![image-20211026145051247](README.assets/image-20211026145051247.png)
+![image-20211109175203783](README.assets/image-20211109175203783.png)
 
+### 图片规则
+
+爬取的是  https://wallhaven.cc/  网站上的图片
+
+## 内嵌功能解释
+
+![image-20211109174648911](README.assets/image-20211109174648911.png)
 
 ## 下载
 
-https://github.com/mlmdflr/xps-google-translation/releases/
+https://github.com/mlmdflr/xps-google-translation/releases/download/v3.0.0/xps-google-translate_Setup_3.0.0.exe
