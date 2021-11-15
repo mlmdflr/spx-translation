@@ -1,6 +1,6 @@
 # xps-google-translation
 
-关于源码,可以在软件安装目录里解包就能看了....
+源码地址:https://gitee.com/xp-system-enhancement-group/xps-electron-ts-vue3-template/tree/fy/
 
 ## 快捷键
 
