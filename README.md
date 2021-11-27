@@ -1,6 +1,6 @@
 # xps-google-translation
 
-源码地址:https://gitee.com/xp-system-enhancement-group/xps-electron-ts-vue3-template/tree/fy/
+通过注入js和css把谷歌翻译做出自己想要的样子
 
 ## 快捷键
 
