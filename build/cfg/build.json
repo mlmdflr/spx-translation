@@ -1,0 +1,97 @@
+{
+  "compression": "maximum",
+  "productName": "xps-google-translate",
+  "appId": "org.xps-google-translate",
+  "copyright": "MIT",
+  "asar": true,
+  "directories": {
+    "output": "out"
+  },
+  "files": [
+    "out/electron/**/*",
+    "node_modules/",
+    "dist/",
+    {
+      "from": "src/lib/inside",
+      "to": "inside/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "extraResources": [
+    {
+      "from": "src/lib/extern",
+      "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "extraFiles": [
+    {
+      "from": "src/lib/root",
+      "to": "./"
+    }
+  ],
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "installerIcon": "build/icons/icon.ico",
+    "uninstallerIcon": "build/icons/unicon.ico",
+    "installerHeaderIcon": "build/icons/icon.ico",
+    "installerSidebar": "build/icons/modern-wizard.bmp",
+    "uninstallerSidebar": "build/icons/modern-wizard.bmp",
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "xps-google-translate",
+    "include": "build/cfg/installer.nsh",
+    "menuCategory": false,
+    "displayLanguageSelector": false
+  },
+  "dmg": {
+    "contents": [
+      {
+        "x": 410,
+        "y": 150,
+        "type": "link",
+        "path": "/Applications"
+      },
+      {
+        "x": 130,
+        "y": 150,
+        "type": "file"
+      }
+    ]
+  },
+  "mac": {
+    "icon": "build/icons/icon.icns"
+  },
+  "win": {
+    "icon": "build/icons/icon.ico",
+    "requestedExecutionLevel": "asInvoker",
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "ia32",
+          "x64"
+        ]
+      }
+    ]
+  },
+  "linux": {
+    "icon": "build/icons",
+    "target": "AppImage",
+    "executableName": "xps-google-translate"
+  },
+  "npmRebuild": true,
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "http://127.0.0.1/public"
+    }
+  ]
+}
