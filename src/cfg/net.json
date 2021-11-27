@@ -1,0 +1,10 @@
+{
+  "app": {
+    "url": "http://127.0.0.1:3000/",
+    "enable": false,
+    "timeout": 3000
+  },
+  "socket": {
+    "url": "http://127.0.0.1:3000/ws/"
+  }
+}
