@@ -2,7 +2,7 @@ try {
     document.title = '魔改谷歌翻译';
 
     // 窗口获取焦点时将文本域获取焦点
-    window.ipc.on('window-blur-focus-0',()=>{
+    window.ipc.on('window-blur-focus-0', () => {
         if (document.querySelectorAll('.er8xn')[0]) {
             document.querySelectorAll('.er8xn')[0].focus()
         }
@@ -33,7 +33,7 @@ try {
      */
     let _VfPpkd_Jh9lGc = document.querySelectorAll('.VfPpkd-Jh9lGc')[3]
     _VfPpkd_Jh9lGc.setAttribute('class', 'VfPpkd-Jh9lGc1')
-    
+
     /**
      * 切换按钮 文字页
      */
@@ -54,9 +54,25 @@ try {
      * 缩小按钮 文字页
      */
     let _b_utton1 = document.createElement('div')
+    _b_utton1.id = 'VfPpkd-Bz112c-LgbsSe-fdsx'
     _b_utton1.className = 'VfPpkd-Bz112c-LgbsSe'
     _b_utton1.innerHTML = escapeHTMLPolicy.createHTML('<svg t="1636428130620" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5859" width="200" height="200"><path d="M362.7 160v202.7H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h224c23.6 0 42.7-19.1 42.7-42.7V160c0-17.7-14.3-32-32-32s-32 14.3-32 32zM661.3 864V661.3H864c17.7 0 32-14.3 32-32s-14.3-32-32-32H640c-23.6 0-42.7 19.1-42.7 42.7v224c0 17.7 14.3 32 32 32s32-14.3 32-32z" fill="#F5C71D" p-id="5860"></path><path d="M160 661.3h157.4L170.7 808.1c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l146.7-146.8V864c0 17.7 14.3 32 32 32s32-14.3 32-32V640c0-23.6-19.1-42.7-42.7-42.7H160c-17.7 0-32 14.3-32 32s14.3 32 32 32zM640 426.7h224c17.7 0 32-14.3 32-32s-14.3-32-32-32H706.6L853.4 216c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L661.3 317.4V160c0-17.7-14.3-32-32-32s-32 14.3-32 32v224c0 23.6 19.1 42.7 42.7 42.7z" fill="#040000" p-id="5861"></path></svg><div jsname="s3Eaab" class="VfPpkd-Bz112c-Jh9lGc"></div>');
-    _b_utton1.onclick = () => window.ipc.invoke('full-screen')
+
+
+
+    var _b_utton1_to
+    _b_utton1.onclick = () => {
+        clearTimeout(this._b_utton1_to);//停止单击定时事件
+        this._b_utton1_to = setTimeout(function () {//延迟单击事件触发内容               
+            window.ipc.send('window-func', { type: 'minimize', id: undefined });
+        }, 100);
+    }
+
+    _b_utton1.ondblclick = () => {
+        clearTimeout(this._b_utton1_to);//停止单击定时事件
+        window.ipc.invoke('full-screen')
+    }
+
 
     /**
      * 缩小按钮 文档页
@@ -90,6 +106,7 @@ try {
     _a_kczyd3.appendChild(_b_utton3)
     _a_kczyd3.appendChild(_b_utton4)
     _a_kczyd3.appendChild(_b_utton5)
+
 } catch (e) {
     console.log(e);
 }
