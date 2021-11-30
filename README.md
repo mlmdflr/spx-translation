@@ -32,11 +32,11 @@
 
 ## 设置页面
 
-![image-20211109174954158](README.assets/image-20211109174954158.png)
+![image-20211109174954158](README.assets\image-20211109174954158.png)
 
 不设置默认进入则启动时候选择如下
 
-![image-20211109175203783](README.assets/image-20211109175203783.png)
+![image-20211109175203783](README.assets\image-20211109175203783.png)
 
 ### 图片规则
 
