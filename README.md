@@ -38,6 +38,30 @@
 
 ![image-20211109175203783](README.assets/image-20211109175203783.png)
 
+### 手动设置
+
+设置文件在安装目录的 **resources\extern** 下的gg.json
+
+![image-20211130151440697](README.assets/image-20211130151440697.png)
+
+![image-20211130151359085](README.assets/image-20211130151359085.png)
+
+修改并重新启动就ok
+
+
+
+#### 注意
+
+##### .gg1css 
+
+注入的样式
+
+##### .gg1js
+
+注入的js
+
+
+
 ### 图片规则
 
 爬取的是  https://wallhaven.cc/  网站上的图片
