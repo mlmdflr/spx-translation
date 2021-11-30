@@ -7,6 +7,15 @@ try {
             document.querySelectorAll('.er8xn')[0].focus()
         }
     })
+    //文字按钮点击获焦
+    document.querySelector('.cWQYBc').onclick = () =>{
+        if (document.querySelectorAll('.er8xn')[0]) {
+            setTimeout(() => {
+                document.querySelectorAll('.er8xn')[0].focus()
+            }, 200);
+        }
+    }
+
 
     let _z_QTmif = document.querySelector('.zQTmif');
     _z_QTmif.style = 'background: transparent';

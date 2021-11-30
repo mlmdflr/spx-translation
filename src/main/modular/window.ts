@@ -27,7 +27,7 @@ export function browserWindowInit(args: BrowserWindowConstructorOptions): Browse
   let opt: BrowserWindowConstructorOptions = Object.assign(args, {
     autoHideMenuBar: true,
     titleBarStyle: args.customize.route ? 'hidden' : 'default',
-    frame: isNull(args.frame) ? isLocal : args.frame,
+    frame: !isNull(args.frame) ? args.frame : isLocal,
     show: false,
     webPreferences: {
       preload: join(__dirname, './preload.js'),

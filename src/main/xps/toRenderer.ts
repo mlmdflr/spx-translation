@@ -5,12 +5,21 @@ import { logError } from "../modular/general/log";
 import { getSearchCount, pupImg } from "../modular/pup"
 import Window from '../modular/window';
 import { getJson, init } from ".";
+import type { cfg } from ".";
+import Shortcut from "../modular/enhance/shortcut";
+
+
+
+function setCfg(args: cfg): Promise<unknown> {
+  return writeFile(Global.getExternPath('gg.json'), JSON.stringify(args), { encoding: 'utf-8' })
+}
+
 
 export const xpsOn = () => {
 
   /**
     * 向渲染进程提供翻译的加载初始化
-    */    
+    */
   ipcMain.handle('init', (e, a) => init(a))
 
 
@@ -41,7 +50,7 @@ export const xpsOn = () => {
    * 向渲染进程提供修改配置文件
    */
   ipcMain.handle('updateCfg', (event, args) => {
-    writeFile(Global.getExternPath('gg.json'), JSON.stringify(args), { encoding: 'utf-8' }).then(res => {
+    setCfg(args).then(res => {
       Window.get(0).webContents.insertCSS(`
           .T4LgNb{
             opacity: ${args.ggopacity};
@@ -58,11 +67,34 @@ export const xpsOn = () => {
     })
   })
 
+  ipcMain.handle('setCfg', (event, args) => {
+    return setCfg(args)
+  })
+
+
   /**
-   * 向渲染进程提供修改配置文件
+   * 向渲染进程提供获取配置文件
+   */
+  ipcMain.handle('getCfg', async () => {
+    return await getJson()
+  })
+
+
+  /**
+   * 向渲染进程提供全屏事件
    */
   ipcMain.handle('full-screen', () => {
     if (Window.get(0).fullScreen) Window.get(0).setFullScreen(false)
     else Window.get(0).setFullScreen(true)
   })
+
+
+  
+  /**
+   * 向渲染进程提供解除
+   */
+  ipcMain.handle('unregisterAll', () => {
+    Shortcut.unregisterAll()
+  })
+
 }

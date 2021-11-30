@@ -20,7 +20,7 @@
           <ElButton size="mini" type="info" plain @click="restart">重启</ElButton>
         </ElCol>
         <ElCol :span="3">
-          <ElButton size="mini" type="info" plain  @click="quit">退出</ElButton>
+          <ElButton size="mini" type="info" plain @click="quit">退出</ElButton>
         </ElCol>
       </ElRow>
     </div>
@@ -46,6 +46,9 @@ import {
 } from 'element-plus';
 import { openUrl, relaunch } from '@/renderer/common';
 
+import { getCfg, setCfg,relaunchShortcutRegister } from "@/renderer/common/xps";
+
+
 const data: { code: number, msg: string, url: string } = customize.get().data;
 
 
@@ -57,7 +60,18 @@ const quit = () => {
 }
 
 const restart = () => {
-  relaunch(true)
+  getCfg().then(res=>{
+    if (res.default === 1 ) {
+        res.default = 2
+    }else if (res.default === 2 ) {
+        res.default = 1
+    }
+    setCfg(res).then(res=>{
+      relaunchShortcutRegister().then(res=>{
+        relaunch(true)
+      })
+    })
+  })
 }
 
 const goPage = (url: string) => {

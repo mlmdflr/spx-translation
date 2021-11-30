@@ -14,7 +14,8 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       dist: resolve('dist'),
-      '@': resolve('src')
+      '@': resolve('src'),
+      canvas: false
     }
   },
   module: {

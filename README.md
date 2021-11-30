@@ -2,6 +2,12 @@
 
 通过注入js和css把谷歌翻译做出自己想要的样子
 
+## 谷歌翻译源
+
+### [谷歌翻译中国](https://translate.google.cn/?sl=auto&tl=zh-CN)
+
+### [谷歌翻译国际](https://translate.google.com/?sl=auto&tl=zh-CN)
+
 ## 快捷键
 
 ### ctrl+e
@@ -11,6 +17,18 @@
 ### ctrl+w
 
 **设置窗口的调起**
+
+
+
+## 加载失败页面
+
+![image-20211130100119501](F:\xps\xps-google-translation\README.assets\image-20211130100119501.png)
+
+### 注意
+
+此重启默认会切换源
+
+
 
 ## 设置页面
 
@@ -26,8 +44,42 @@
 
 ## 内嵌功能解释
 
-![image-20211109174648911](README.assets/image-20211109174648911.png)
+### 切换背景
 
-## 下载
+![image-20211130095151054](F:\xps\xps-google-translation\README.assets\image-20211130095151054.png)
 
-https://github.com/mlmdflr/xps-google-translation/releases/download/v3.1.0/xps-google-translate_Setup_3.1.0.exe
+### 关闭退出
+
+![image-20211130095233260](F:\xps\xps-google-translation\README.assets\image-20211130095233260.png)
+
+### 全屏/最小化
+
+![image-20211130095406590](F:\xps\xps-google-translation\README.assets\image-20211130095406590.png)
+
+#### click 最小化
+
+#### double click 全屏
+
+
+
+## 指令
+
+```shell
+//下载源码
+git@github.com:mlmdflr/xps-google-translation.git
+
+//下载依赖
+yarn 
+
+//依赖下载不动/下载失败
+yarn config set electron_mirror https://cdn.npm.taobao.org/dist/electron/
+
+//运行
+yarn run dev
+
+//打包
+yarn run build:win
+```
+
+
+
