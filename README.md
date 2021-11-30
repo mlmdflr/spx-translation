@@ -22,7 +22,7 @@
 
 ## 加载失败页面
 
-![image-20211130100119501](README.assets\image-20211130100119501.png)
+![image-20211130100119501](README.assets/image-20211130100119501.png)
 
 ### 注意
 
@@ -32,11 +32,11 @@
 
 ## 设置页面
 
-![image-20211109174954158](README.assets\image-20211109174954158.png)
+![image-20211109174954158](README.assets/image-20211109174954158.png)
 
 不设置默认进入则启动时候选择如下
 
-![image-20211109175203783](README.assets\image-20211109175203783.png)
+![image-20211109175203783](README.assets/image-20211109175203783.png)
 
 ### 图片规则
 
@@ -46,15 +46,15 @@
 
 ### 切换背景
 
-![image-20211130095151054](README.assets\image-20211130095151054.png)
+![image-20211130095151054](README.assets/image-20211130095151054.png)
 
 ### 关闭退出
 
-![image-20211130095233260](README.assets\image-20211130095233260.png)
+![image-20211130095233260](README.assets/image-20211130095233260.png)
 
 ### 全屏/最小化
 
-![image-20211130095406590](README.assets\image-20211130095406590.png)
+![image-20211130095406590](README.assets/image-20211130095406590.png)
 
 #### click 最小化
 
