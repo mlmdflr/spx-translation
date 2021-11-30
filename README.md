@@ -22,7 +22,7 @@
 
 ## 加载失败页面
 
-![image-20211130100119501](F:\xps\xps-google-translation\README.assets\image-20211130100119501.png)
+![image-20211130100119501](README.assets\image-20211130100119501.png)
 
 ### 注意
 
@@ -46,15 +46,15 @@
 
 ### 切换背景
 
-![image-20211130095151054](F:\xps\xps-google-translation\README.assets\image-20211130095151054.png)
+![image-20211130095151054](README.assets\image-20211130095151054.png)
 
 ### 关闭退出
 
-![image-20211130095233260](F:\xps\xps-google-translation\README.assets\image-20211130095233260.png)
+![image-20211130095233260](README.assets\image-20211130095233260.png)
 
 ### 全屏/最小化
 
-![image-20211130095406590](F:\xps\xps-google-translation\README.assets\image-20211130095406590.png)
+![image-20211130095406590](README.assets\image-20211130095406590.png)
 
 #### click 最小化
 
