@@ -1,10 +1,13 @@
 import { isNull } from "@/lib/util"
 import sleep from "@/lib/util/sleep"
-import { BrowserWindowConstructorOptions } from "electron";
 import { readFile } from "../modular/general/file"
 import Global from "../modular/general/global";
+import { logInfo } from "../modular/general/log";
 import { pupImg } from "../modular/pup";
 import Window from '../modular/window';
+
+
+export type cfg = { wifekeyword: string, ggopacity: number, winopacity: number, default: number }
 
 
 /**
@@ -12,7 +15,7 @@ import Window from '../modular/window';
  * @returns 配置文件
  */
 const getJson = async () => {
-  return JSON.parse(await readFile(Global.getExternPath('gg.json'), { encoding: 'utf-8' }) as string) as { wifekeyword: string, ggopacity: number, winopacity: number, default: number }
+  return JSON.parse(await readFile(Global.getExternPath('gg.json'), { encoding: 'utf-8' }) as string) as cfg
 }
 
 /**
@@ -28,22 +31,35 @@ const init = async (windowId: number | bigint, time?: number) => {
   //加载失败处理 fail deal with
   Window.get(windowId).webContents.once('did-fail-load', async (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
     console.log(event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
-    Window.create({
-      opacity: (await getJson()).winopacity,
-      customize: {
-        id: 3,
-        title: '加载失败',
-        route: '/notify',
-        parentId: 0,
-        data: { code: errorCode, msg: errorDescription, url: validatedURL }
-      },
-      height: 230,
-      width: 600,
-      modal: true,
-      resizable: false
-    })
+    logInfo(`[did-fail-load]\n`, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId)
+    if (validatedURL === "https://translate.google.com/?sl=auto&tl=zh-CN" || validatedURL === "https://translate.google.cn/?sl=auto&tl=zh-CN") {
+      Window.create({
+        opacity: (await getJson()).winopacity,
+        customize: {
+          id: 3,
+          title: '加载失败',
+          route: '/notify',
+          parentId: 0,
+          data: { code: errorCode, msg: errorDescription, url: validatedURL }
+        },
+        height: 230,
+        width: 600,
+        modal: true,
+        resizable: false
+      })
+    }
   })
-  Window.get(windowId).webContents.once('did-finish-load', async () => {
+
+
+  //开始加载显示窗体
+  Window.get(windowId).webContents.once('did-start-loading',()=>{
+    Window.get(windowId).webContents.executeJavaScript(`
+      window.ipc.send('window-func', { type: 'show' });
+    `)
+  })
+
+  //加载完成注入
+  Window.get(windowId).webContents.once('dom-ready', async () => {
     Window.get(windowId).webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
           ${await readFile(Global.getExternPath('.gg1js'))}
@@ -78,13 +94,16 @@ const init = async (windowId: number | bigint, time?: number) => {
             `)
     })
   })
+
+  //关闭创建新窗体
   Window.get(windowId).webContents.setWindowOpenHandler((): { action: "deny" } => {
     return { action: "deny" }
   })
+
+  //禁止一些页面内跳转
   Window.get(windowId).webContents.on('will-navigate', (event, url) => {
     let tf = url.match(/translate_f/g)
-    let sl = url.match(/ServiceLogin/g)
-    if (sl) {
+    if (!tf) {
       event.preventDefault()
     }
     if (tf) {

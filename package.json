@@ -1,7 +1,7 @@
 {
   "name": "xps-google-translate",
   "productName": "魔改谷歌翻译",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "基于xp系统强化组织旗下 electron-vue3 和 谷歌翻译web 开发",
   "main": "dist/js/main.js",
   "author": {
