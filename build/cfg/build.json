@@ -8,21 +8,10 @@
     "output": "out"
   },
   "files": [
-    "out/electron/**/*",
-    "node_modules/",
-    "dist/",
+    "dist/**/*",
     {
-      "from": "src/lib/inside",
+      "from": "resources/inside",
       "to": "inside/",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
-  "extraResources": [
-    {
-      "from": "src/lib/extern",
-      "to": "extern/",
       "filter": [
         "**/*"
       ]
@@ -30,7 +19,7 @@
   ],
   "extraFiles": [
     {
-      "from": "src/lib/root",
+      "from": "resources/root",
       "to": "./"
     }
   ],
@@ -74,10 +63,10 @@
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
-        "target": "nsis",
+        "target": "portable",
         "arch": [
-          "ia32",
-          "x64"
+          "x64",
+          "ia32"
         ]
       }
     ]
@@ -92,6 +81,15 @@
     {
       "provider": "generic",
       "url": "http://127.0.0.1/public"
+    }
+  ],
+  "extraResources": [
+    {
+      "from": "resources/extern",
+      "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
     }
   ]
 }

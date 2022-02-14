@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const base = require('./webpack.base.config');
+const webpack = require("webpack");
 module.exports = (env) => {
   return {
     experiments: base.experiments,
@@ -21,7 +22,7 @@ module.exports = (env) => {
       chunkFilename: './js/[id]v.js',
       path: resolve('dist')
     },
-    resolve:base.resolve,
+    resolve: base.resolve,
     module: {
       rules: [
         ...base.module.rules,

@@ -17,6 +17,8 @@ export function shortcutRegister() {
             }
             if (Window.get(0).isMinimized()) {
                 Window.get(0).restore()
+                Window.get(0).focus()
+                return
             }
             if (Window.get(0).isVisible()) {
                 Window.get(0).hide()
@@ -75,7 +77,7 @@ export async function windowRegister() {
                         id: 0,
                         url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
                     }
-                }
+                }   
             );
             await init(0)
             break;

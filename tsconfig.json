@@ -14,8 +14,14 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     }
   },
-  "include": ["src/**/*.d.ts", "src/**/*.vue", "src/**/*.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "src/**/*.ts"
+  ]
 }

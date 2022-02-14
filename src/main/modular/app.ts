@@ -3,9 +3,9 @@ import { resolve } from 'path';
 import { logError } from '@/main/modular/general/log';
 import Shortcut from '@/main/modular/enhance/shortcut';
 import Window from '@/main/modular/window';
-import Global from '@/main/modular/general/global';
-import { isNull } from '@/lib/util';
+import { isNull } from '@/util';
 
+const { single } = require('@/cfg/window.json');
 const { initRoute } = require('@/cfg/window.json');
 
 export class App {
@@ -71,7 +71,7 @@ export class App {
     else {
       app.on('second-instance', (event, argv) => {
         // 当运行第二个实例时,将会聚焦到main窗口
-        if (Global.getGlobal('app.single')) {
+        if (single) {
           const main = Window.getMain();
           if (main) {
             if (main.isMinimized()) main.restore();

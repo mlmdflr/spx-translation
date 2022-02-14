@@ -11,7 +11,7 @@ import Shortcut from "../modular/enhance/shortcut";
 
 
 function setCfg(args: cfg): Promise<unknown> {
-  return writeFile(Global.getExternPath('gg.json'), JSON.stringify(args), { encoding: 'utf-8' })
+  return writeFile(Global.getResourcesPath('extern', 'gg.json'), JSON.stringify(args), { encoding: 'utf-8' })
 }
 
 
@@ -89,7 +89,7 @@ export const xpsOn = () => {
   })
 
 
-  
+
   /**
    * 向渲染进程提供解除
    */

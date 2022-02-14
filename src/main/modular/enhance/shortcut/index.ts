@@ -1,6 +1,6 @@
 import { globalShortcut, ipcMain } from 'electron';
-import { deepCopy } from '@/lib/util';
-import { snowflake } from '@/lib/util/snowflake';
+import { deepCopy } from '@/util';
+import { snowflake } from '@/util/snowflake';
 import Window from '@/main/modular/window';
 import { logError } from "@/main/modular/general/log";
 

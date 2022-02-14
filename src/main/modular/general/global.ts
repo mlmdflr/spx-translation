@@ -93,17 +93,9 @@ export class Global {
     ipcMain.handle('global-shared-object-get', (event, key) => {
       return this.getGlobal(key);
     });
-    //获取(insidePath)
-    ipcMain.handle('global-inside-path-get', (event, path) => {
-      return this.getInsidePath(path);
-    });
-    //获取(externPath)
-    ipcMain.handle('global-extern-path-get', (event, path) => {
-      return this.getExternPath(path);
-    });
-    //获取(rootPath)
-    ipcMain.handle('global-root-path-get', (event, path) => {
-      return this.getRootPath(path);
+    //获取依赖路径
+    ipcMain.handle('global-resources-path-get', (event, { type, path }) => {
+      return this.getResourcesPath(type, path);
     });
   }
 
@@ -167,69 +159,45 @@ export class Global {
   }
 
   /**
-   * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
-   * 2021.9.7 修改 打包后无法获取路径问题 使用join来拼接路径
-   * 修复直接抛出异常阻塞node的bug
-   * @param path lib/inside为起点的相对路径 | 异常时会返回 undefined
-   * */
-  getInsidePath(path?: string): string {
+  * 获取资源文件路径
+  * 不传path返回此根目录
+  * */
+  getResourcesPath(type: 'platform' | 'inside' | 'extern' | 'root', path: string = './'): string {
     try {
-      if (!path) return app.isPackaged
-        ? resolve(join(__dirname, '..', '..', 'inside'))
-        : resolve(join('src', 'lib', 'inside'))
-      path = normalize(
-        app.isPackaged
-          ? resolve(join(__dirname, '..', '..', 'inside', path))
-          : resolve(join('src', 'lib', 'inside', path))
-      );
+      switch (type) {
+        case 'platform':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'platform', process.platform, path))
+              : resolve(join('resources', 'platform', process.platform, path)));
+          break;
+        case 'inside':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', 'inside', path))
+              : resolve(join('resources', 'inside', path))
+          );
+          break;
+        case 'extern':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
+              : resolve(join('resources', 'extern', path))
+          );
+          break;
+        case 'root':
+          path = normalize(
+            app.isPackaged
+              ? resolve(join(__dirname, '..', '..', '..', '..', path))
+              : resolve(join('resources', 'root', path))
+          );
+          break;
+      }
       accessSync(path, constants.R_OK);
       return path;
     } catch (e) {
-      logError(`[InsidePath ${path}]`, e);
-      return
-    }
-  }
-
-  /**
-   * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
-   * 2021.9.7 修改 打包后无法获取路径问题 使用join来拼接路径
-   * 修复直接抛出异常阻塞node的bug
-   * @param path lib/extern为起点的相对路径  | 异常时会返回 undefined
-   * */
-  getExternPath(path?: string): string {
-    try {
-      if (!path) return app.isPackaged
-        ? resolve(join(__dirname, '..', '..', '..', 'extern'))
-        : resolve(join('src', 'lib', 'extern'))
-      path = normalize(
-        app.isPackaged
-          ? resolve(join(__dirname, '..', '..', '..', 'extern', path))
-          : resolve(join('src', 'lib', 'extern', path))
-      );
-      accessSync(path, constants.R_OK);
-      return path;
-    } catch (e) {
-      logError(`[ExternPath ${path}]`, e);
-      return
-    }
-  }
-
-
-  getRootPath(path?: string): string {
-    try {
-      if (!path) return app.isPackaged
-        ? resolve(join(__dirname, '..', '..', '..', '..'))
-        : resolve(join('src', 'lib', 'root'))
-      path = normalize(
-        app.isPackaged
-          ? resolve(join(__dirname, '..', '..', '..', '..', path))
-          : resolve(join('src', 'lib', 'root', path))
-      );
-      accessSync(path, constants.R_OK);
-      return path;
-    } catch (e) {
-      logError(`[getRootPath ${path}]`, e);
-      return
+      logError(`[path ${path}]`, e);
+      throw e;
     }
   }
 }

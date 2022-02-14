@@ -1,8 +1,8 @@
 import { join } from 'path';
 import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions, HandlerDetails } from 'electron';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { snowflake } from "@/lib/util/snowflake";
-import { isNull } from '@/lib/util';
+import { snowflake } from "@/util/snowflake";
+import { isNull } from '@/util';
 
 const windowCfg = require('@/cfg/window.json');
 const { workerId, dataCenterId } = require('@/cfg/snowflake.json')
