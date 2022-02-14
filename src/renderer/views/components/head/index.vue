@@ -18,7 +18,7 @@
 
 
 <script setup lang='ts' >
-import { getGlobal } from '@/renderer/common';
+import { getGlobal } from '@/renderer/common/app';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import customize from '@/renderer/store/customize';
 

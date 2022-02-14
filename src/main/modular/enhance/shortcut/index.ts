@@ -1,6 +1,6 @@
 import { globalShortcut, ipcMain } from 'electron';
 import { deepCopy } from '@/util';
-import { snowflake } from '@/util/snowflake';
+import { Snowflake } from '@/util/snowflake';
 import Window from '@/main/modular/window';
 import { logError } from "@/main/modular/general/log";
 
@@ -109,6 +109,7 @@ class Shortcut {
    * 清空已注册快捷键
    */
   private delAll() {
+    // @ts-ignore
     delete this.data;
     this.data = [];
   }
@@ -122,12 +123,12 @@ class Shortcut {
     for (let i = 0, len = this.data.length; i < len; i++) {
       const accelerator = this.data[i];
       if (typeof accelerator.key === 'string' && accelerator.key === key) {
-        return accelerator.id
+        return accelerator.id as number | bigint
       }
       if (Array.isArray(accelerator.key)) {
         const index = accelerator.key.indexOf(key);
         if (index > ACCELERATOR_CONST.NOT_ID) {
-          return accelerator.id
+          return accelerator.id as number | bigint
         }
       }
     }
@@ -146,7 +147,7 @@ class Shortcut {
       logError(`[ shortcut accelerator ]  id  is ${accelerator.id} || key is ${accelerator.key} `);
       return false
     }
-    this.unregister_id(accelerator.id);
+    this.unregister_id(accelerator.id as number | bigint);
     if (typeof accelerator.key === 'string') {
       this.unregister_id(this.check(accelerator.key))
       globalShortcut.register(accelerator.key, accelerator.callback);
@@ -193,11 +194,12 @@ class Shortcut {
   on() {
     ipcMain.handle('shortcut-register', (event, args: { id?: number | bigint; key: string | string[] }) => {
       const accelerator: Accelerator = {
-        id: !args.id ? new snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId() : args.id,
+        id: !args.id ? new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId() : args.id,
         key: args.key,
         callback: () => Window.send(`shortcut-${accelerator.id}-back`, args.key)
       };
       if (!this.register_id(accelerator)) {
+        // @ts-ignore
         delete accelerator.callback;
         return undefined
       }
@@ -217,6 +219,7 @@ class Shortcut {
     });
     ipcMain.handle('shortcut-getAll', (event) => {
       const acceleratorAll = this.getAll();
+      // @ts-ignore
       acceleratorAll.map((e) => delete e.callback);
       return acceleratorAll;
     });

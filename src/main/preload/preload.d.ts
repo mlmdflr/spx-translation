@@ -9,14 +9,18 @@ interface Ipc {
   removeAllListeners: (channel: string) => this;
 }
 
-interface Clipboard {
-  readText: () => string;
-  writeText: (str: string) => void;
+interface Environment {
+  EOL: string;
+  systemVersion: string;
+  platform: string;
+  isPackaged:boolean;
+  isSecondInstanceWin: boolean;
 }
+
 
 declare global {
   interface Window {
     ipc: Ipc;
-    clipboard: Clipboard;
+    environment: Environment;
   }
 }

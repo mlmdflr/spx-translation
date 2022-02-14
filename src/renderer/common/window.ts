@@ -1,10 +1,10 @@
-import { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
+import type { IpcRendererEvent, BrowserWindowConstructorOptions } from 'electron';
 import customize from '@/renderer/store/customize';
 
 /**
  * 窗口初始化 (i)
  * */
-export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) => void, customizeId?: number | bigint) {
+export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) => void) {
   window.ipc.once(`window-load`, listener);
 }
 
@@ -72,11 +72,12 @@ export function windowMessageRemove(channel: string) {
  * @param acceptIds 指定窗口id发送(默认为父窗体)
  */
 export function windowMessageSend(
-  channel: string,
-  value: any,
-  isback: boolean = false,
-  acceptIds: any[] = [customize.get().parentId]
+  channel: string, //监听key（保证唯一）
+  value: any, //需要发送的内容
+  isback: boolean = false, //是否给自身反馈
+  acceptIds: (number | bigint | undefined)[] = [] //指定窗口id发送
 ) {
+  if (acceptIds.length === 0 && customize.get().parentId !== undefined) acceptIds = [customize.get().parentId];
   window.ipc.send('window-message-send', {
     channel,
     value,
@@ -109,21 +110,21 @@ export function windowMessageSendAll(
 /**
  * 创建窗口
  */
-export function windowCreate(args: BrowserWindowConstructorOptions) {
-  window.ipc.send('window-new', args);
+export function windowCreate(customize: Customize, opt?: BrowserWindowConstructorOptions) {
+  window.ipc.send('window-new', { customize, opt });
 }
 
 /**
  * 窗口状态
  */
-export async function windowStatus(id: number | bigint = customize.get().id, type: windowStatusOpt) {
-  return await window.ipc.invoke('window-status', { type, id });
+export async function windowStatus(id: number | bigint = customize.get().id as number | bigint, type: WindowStatusOpt) {
+  return window.ipc.invoke('window-status', { type, id });
 }
 
 /**
  * 窗口置顶
  */
-export function windowAlwaysOnTop(id: number | bigint = customize.get().id, is: boolean, type?: windowAlwaysOnTopOpt) {
+export function windowAlwaysOnTop(id: number | bigint = customize.get().id as number | bigint, is: boolean, type?: WindowAlwaysOnTopOpt) {
   window.ipc.send('window-always-top-set', { id, is, type });
 }
 
@@ -134,44 +135,41 @@ export function windowSetSize(
   size: number[],
   resizable: boolean = true,
   center: boolean = false,
-  id: number | bigint = customize.get().id
+  id: number | bigint = customize.get().id as number | bigint
 ) {
   window.ipc.send('window-size-set', { id, size, resizable, center });
 }
 
 /**
- * 设置窗口最小大小
+ * 设置窗口 最大/最小 大小
  */
-export function windowSetMinSize(id: number | bigint = customize.get().id, size: number[]) {
-  window.ipc.send('window-min-size-set', { id, size });
-}
-
-/**
- * 设置窗口最小大小
- */
-export function windowSetMaxSize(id: number | bigint = customize.get().id, size: number[]) {
-  window.ipc.send('window-max-size-set', { id, size });
+export function windowSetMaxMinSize(
+  type: 'max' | 'min',
+  size: number | undefined[],
+  id: number | bigint = customize.get().id as number | bigint
+) {
+  window.ipc.send(`window-${type}-size-set`, { id, size });
 }
 
 /**
  * 设置窗口背景颜色
  */
-export function windowSetBackgroundColor(id: number | bigint = customize.get().id, color?: string) {
+export function windowSetBackgroundColor(id: number | bigint = customize.get().id as number | bigint, color?: string) {
   window.ipc.send('window-bg-color-set', { id, color });
 }
 
 /**
  * 最大化&最小化当前窗口
  */
-export function windowMaxMin(id: number | bigint = customize.get().id) {
+export function windowMaxMin(id: number | bigint = customize.get().id as number | bigint) {
   window.ipc.send('window-max-min-size', id);
 }
 
 /**
  * 关闭窗口
  */
-export function windowClose(id: number | bigint = customize.get().id) {
-  window.ipc.send('window-func', { type: 'close', id });
+export function windowClose(id: number | bigint = customize.get().id as number | bigint) {
+  window.ipc.send('window-close', id);
 }
 
 /**
@@ -179,41 +177,45 @@ export function windowClose(id: number | bigint = customize.get().id) {
  * @param id 窗口id
  * @param time 延迟显示时间
  */
-export function windowShow(id: number | bigint = customize.get().id, time: number = 0) {
+export function windowShow(id: number | bigint = customize.get().id as number | bigint, time: number = 0) {
   setTimeout(() => window.ipc.send('window-func', { type: 'show', id }), time);
 }
 
 /**
  * 窗口隐藏
  */
-export function windowHide(id: number | bigint = customize.get().id) {
+export function windowHide(id: number | bigint = customize.get().id as number | bigint) {
   window.ipc.send('window-func', { type: 'hide', id });
 }
 
 /**
  * 最小化窗口 
  */
-export function windowMin(id: number | bigint = customize.get().id) {
+export function windowMin(id: number | bigint = customize.get().id as number | bigint) {
   window.ipc.send('window-func', { type: 'minimize', id });
 }
 
 /**
  * 最大化窗口
  */
-export function windowMax(id: number | bigint = customize.get().id) {
+export function windowMax(id: number | bigint = customize.get().id as number | bigint) {
   window.ipc.send('window-func', { type: 'maximize', id });
+}
+
+/**
+ * window函数
+ */
+ export function windowFunc(
+  type: WindowFuncOpt,
+  data?: any[],
+  id: number | bigint = customize.get().id as number | bigint
+) {
+  window.ipc.send('window-func', { type, data, id });
 }
 
 /**
  * 通过路由获取窗口id (不传route查全部)
  */
 export async function windowIdRoute(route?: string): Promise<[]> {
-  return await window.ipc.invoke('window-id-route', { route });
-}
-
-/**
- * 通过url获取窗口id (不传url查全部)
- */
-export async function windowIdUrl(url?: string): Promise<[]> {
-  return await window.ipc.invoke('window-id-url', { url });
+  return window.ipc.invoke('window-id-route', route);
 }

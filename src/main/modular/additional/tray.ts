@@ -6,7 +6,7 @@ import ico from '@/assets/icon/tray.png';
 class Trays {
   private static instance: Trays;
 
-  public main: Tray = null; //托盘
+  public main: Tray | undefined; //托盘
 
   static getInstance() {
     if (!Trays.instance) Trays.instance = new Trays();
@@ -38,7 +38,7 @@ class Trays {
   /**
    * 监听
    */
-  on() {}
+  on() { }
 }
 
 export default Trays.getInstance();

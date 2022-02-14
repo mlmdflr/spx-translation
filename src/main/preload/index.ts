@@ -1,4 +1,7 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent, clipboard } from 'electron';
+import type { IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
+import { EOL } from 'os';
+import { isSecondInstanceWin } from '@/cfg/app.json'
 
 contextBridge.exposeInMainWorld('ipc', {
   send: (channel: string, args?: any) => ipcRenderer.send(channel, args),
@@ -11,7 +14,9 @@ contextBridge.exposeInMainWorld('ipc', {
   removeAllListeners: (channel: string) => ipcRenderer.removeAllListeners(channel)
 });
 
-contextBridge.exposeInMainWorld('clipboard', {
-  readText: (): string => clipboard.readText(),
-  writeText: (str: string) => clipboard.writeText(str)
+contextBridge.exposeInMainWorld('environment', {
+  EOL,
+  systemVersion: process.getSystemVersion(),
+  platform: process.platform,
+  isSecondInstanceWin
 });

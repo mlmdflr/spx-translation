@@ -1,8 +1,12 @@
 {
-  "width": 800,
-  "height": 600,
-  "backgroundColor": "#ffffff",
-  "initRoute": "/home",
-  "single": true,
-  "title": "魔改谷歌翻译"
+  "opt": {
+    "width": 800,
+    "height": 600,
+    "backgroundColor": "#222"
+  },
+  "customize": {
+    "title": "xps-google-translation",
+    "route": "/home",
+    "isMainWin": true
+  }
 }

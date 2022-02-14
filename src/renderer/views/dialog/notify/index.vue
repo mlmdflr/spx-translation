@@ -44,7 +44,7 @@ import {
   ElRow,
   ElCol
 } from 'element-plus';
-import { openUrl, relaunch } from '@/renderer/common';
+import { openUrl, relaunch } from '@/renderer/common/app';
 
 import { getCfg, setCfg,relaunchShortcutRegister } from "@/renderer/common/xps";
 

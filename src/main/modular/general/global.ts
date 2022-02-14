@@ -5,8 +5,6 @@ import { EOL } from 'os';
 import { logError } from '@/main/modular/general/log';
 import { readFile } from './file';
 
-const { single } = require('@/cfg/window.json');
-
 
 type Obj<Value> = {} & {
   [key: string]: Value | Obj<Value>;
@@ -32,22 +30,7 @@ interface Config {
 export class Global {
   private static instance: Global;
 
-  public sharedObject: { [key: string]: any } = {
-    //系统信息
-    system: {
-      EOL,
-      version: process.getSystemVersion(),
-      platform: process.platform
-    },
-    //应用信息
-    app: {
-      // 是否单例
-      single,
-      name: app.name,
-      version: app.getVersion(),
-      isPackaged: app.isPackaged
-    }
-  };
+  public sharedObject: { [key: string]: any } = {};
 
   static getInstance() {
     if (!Global.instance) Global.instance = new Global();
@@ -93,7 +76,7 @@ export class Global {
     ipcMain.handle('global-shared-object-get', (event, key) => {
       return this.getGlobal(key);
     });
-    //获取依赖路径
+    //获取(依赖路径)
     ipcMain.handle('global-resources-path-get', (event, { type, path }) => {
       return this.getResourcesPath(type, path);
     });

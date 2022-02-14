@@ -3,7 +3,6 @@ export type treatedBytes = { bytes: number, unit: string }
 export default class {
 
     constructor() { }
-
     /**
      * @description 判斷ip地址是否為內網ip/包含localhost
      * @author 没礼貌的芬兰人
@@ -27,8 +26,6 @@ export default class {
         _ip = _ip >> 16 & 0xFFFF
         return (_ip >> 8 == 0x7F || _ip >> 8 == 0xA || _ip == 0xC0A8 || (_ip >= 0xAC10 && _ip <= 0xAC1F));
     }
-
-
     /**
      * @description b 自动向上转换函数
      * @author 没礼貌的芬兰人

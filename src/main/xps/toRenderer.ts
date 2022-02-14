@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { ipcMain } from "electron"
 import { writeFile } from "../modular/general/file"
 import Global from "../modular/general/global"

@@ -176,7 +176,7 @@ export default class PageUtil {
     /**
      * @description 彩虹分页算法
      * @author 没礼貌的芬兰人
-     * @date 2021-10-06 17:10:59
+     * @date 2020-6-06 17:10:59
      * @param currentPage 当前页
      * @param pageCount 总页数
      * @param displayCount 每屏展示的页数
@@ -198,29 +198,28 @@ export default class PageUtil {
             return Promise.reject(`参数异常,请检查 pageCount : ${pageCount}`);
         }
 
-        if (displayCount < 0) {
+        if (displayCount as number < 0) {
             return Promise.reject(`参数异常,请检查 displayCount : ${displayCount}`);
         }
-
-        const isEven: boolean = displayCount % 2 === 0;
-        const left: number = Math.floor(displayCount / 2);
-        let right: number = Math.floor(displayCount / 2);
-        let length: number = displayCount;
+        const isEven: boolean = displayCount as number % 2 === 0;
+        const left: number = Math.floor(displayCount as number / 2);
+        let right: number = Math.floor(displayCount as number / 2);
+        let length: number = displayCount as number;
         if (isEven) {
             right++;
         }
-        if (pageCount < displayCount) {
+        if (pageCount < (displayCount as number)) {
             length = pageCount;
         }
         let result: number[] = new Array(length);
-        if (pageCount >= displayCount) {
+        if (pageCount >= (displayCount as number)) {
             if (currentPage <= left) {
                 for (let i: number = 0; i < result.length; i++) {
                     result[i] = i + 1;
                 }
             } else if (currentPage > pageCount - right) {
                 for (let i: number = 0; i < result.length; i++) {
-                    result[i] = i + pageCount - displayCount + 1;
+                    result[i] = i + pageCount - (displayCount as number) + 1;
                 }
             } else {
                 for (let i: number = 0; i < result.length; i++) {

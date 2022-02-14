@@ -1,45 +1,88 @@
-import type { ClientRequestConstructorOptions, ClientRequest } from 'electron';
-import { net } from 'electron';
-import { createReadStream, statSync } from 'fs';
+import type { ClientRequestArgs, IncomingMessage, OutgoingHttpHeaders } from 'http';
+import { request as httpRequest } from 'http';
+import { request as httpsRequest } from 'https';
 import { basename, extname } from 'path';
-import { queryParams } from "@/util";
+import { createReadStream, statSync } from 'fs';
 
-const { app } = require('@/cfg/net.json');
+export type Response = IncomingMessage;
+export type HeadersInit = OutgoingHttpHeaders;
 
-export interface NetOpt extends ClientRequestConstructorOptions {
+export interface RequestOpt extends RequestInit {
   // 是否stringify参数（非GET请求使用）
   isStringify?: boolean;
+}
+
+export interface RequestUploadOpt extends RequestInit {
+  filePath: string;
+  fileName: string;
+  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
+}
+
+export interface RequestDownloadOpt extends RequestInit {
+  // 是否stringify参数（非GET请求使用）
+  isStringify?: boolean;
+  onDown?: (chunk?: Buffer, allLength?: number) => void;
+}
+
+/**
+ * 对象转参数
+ * @param data
+ */
+export function queryParams(data: any): string {
+  let _result = [];
+  for (let key in data) {
+    let value = data[key];
+    if (['', undefined, null].includes(value)) {
+      continue;
+    }
+    if (value.constructor === Array) {
+      value.forEach((_value) => {
+        _result.push(encodeURIComponent(key) + '[]=' + encodeURIComponent(_value));
+      });
+    } else {
+      _result.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    }
+  }
+  return _result.length ? _result.join('&') : '';
+}
+
+interface RequestInit {
   // 是否获取headers
   isHeaders?: boolean;
-  onRequest?: (request: ClientRequest) => void;
-  headers?: { [key: string]: string };
+  headers?: HeadersInit;
+  method?: string;
   timeout?: number;
   data?: any;
   type?: 'TEXT' | 'JSON' | 'BUFFER';
   encoding?: BufferEncoding;
-  // 是否下载请求
-  isDownload?: boolean;
-  onDownload?: (chunk?: Buffer, length?: number) => void;
-  // 是否上传请求
-  isUpload?: boolean;
-  filePath?: string;
-  fileName?: string;
-  onUploadProgress?: (status: 'open' | 'ing' | 'end', size?: number, fullSize?: number) => void;
-  host?: string;
-  port?: number;
+  args?: ClientRequestArgs;
 }
 
 function dataToFormData(boundary: string, key: string, value: string) {
   return `--${boundary}\r\nContent-Disposition: form-data; name="${key}"\r\n\r\n${value}\r\n`;
 }
 
+function requestInit(
+  url: string,
+  sendData: ClientRequestArgs = {},
+  ing: (response: IncomingMessage) => void
+) {
+  const isHttp = url.startsWith('http://');
+  if (isHttp) return httpRequest(url, sendData, ing);
+  return httpsRequest(url, sendData, ing);
+}
+
 /**
  * 上传
+ * @param url
  * @param sendData
  * @param params
  */
-function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
+export function upload(url: string, params: RequestUploadOpt) {
   return new Promise((resolve, reject) => {
+    params.method = params.method || 'GET';
+    params.args = params.args || { method: params.method };
+    if (!params.args.method) params.args.method = params.method;
     const boundary = '--' + Math.random().toString(16);
     const headers = Object.assign(
       {
@@ -50,23 +93,7 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
     if (!params.fileName) params.fileName = basename(params.filePath, extname(params.filePath));
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    if (params.data) {
-      for (const i in params.data) {
-        request.write(dataToFormData(boundary, i, params.data[i]));
-      }
-    }
-    request.write(
-      `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${params.fileName}"\r\n\r\n`
-    );
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
+    function ing(response: IncomingMessage) {
       response.on('data', (chunk) => {
         chunks.push(chunk);
         size += chunk.length;
@@ -75,6 +102,22 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
         const data = Buffer.concat(chunks, size);
         resolve(data);
       });
+    }
+    let request = requestInit(url, params.args, ing);
+    for (const header in headers) request.setHeader(header, headers[header] as string);
+    if (params.data) {
+      for (const i in params.data) {
+        request.write(dataToFormData(boundary, i, params.data[i]));
+      }
+    }
+    request.write(
+      `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${params.fileName}"\r\n\r\n`
+    );
+    request.on('destroyed', () => {
+      reject(new Error('destroy'));
+    });
+    request.on('error', (err) => {
+      reject(err);
     });
     const fileSize = statSync(params.filePath).size;
     const readStream = createReadStream(params.fileName, {
@@ -83,15 +126,14 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
       start: 0,
       end: fileSize
     });
-    const isOnUploadProgress: boolean = !!params.onUploadProgress;
     readStream.on('open', () => {
-      if (isOnUploadProgress) params.onUploadProgress('open');
+      if (params.onUploadProgress) params.onUploadProgress('open');
     });
     readStream.on('data', () => {
-      if (isOnUploadProgress) params.onUploadProgress('ing', readStream.bytesRead, fileSize);
+      if (params.onUploadProgress) params.onUploadProgress('ing', readStream.bytesRead, fileSize);
     });
     readStream.on('end', () => {
-      if (isOnUploadProgress) params.onUploadProgress('end');
+      if (params.onUploadProgress) params.onUploadProgress('end');
       request.end('\r\n--' + boundary + '--\r\n');
     });
     readStream.pipe(request as unknown as NodeJS.WritableStream, { end: false });
@@ -100,108 +142,83 @@ function upload(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) 
 
 /**
  * 下载
+ * @param url
  * @param sendData
  * @param params
  */
-function download(sendData: ClientRequestConstructorOptions, params: NetOpt = {}) {
+export function download(url: string, params: RequestDownloadOpt = {}) {
   return new Promise((resolve, reject) => {
-    const headers = Object.assign({}, params.headers);
+    params.method = params.method || 'GET';
+    params.args = params.args || { method: params.method };
     params.type = 'BUFFER';
+    if (!params.args.method) params.args.method = params.method;
+    const headers = Object.assign({}, params.headers);
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
+    function ing(response: IncomingMessage) {
+      const allLength = Number(response.headers['content-length'] || 0);
       response.on('data', (chunk) => {
-        if (params.onDownload) {
-          params.onDownload(chunk, Number(response.headers['content-length'] || 0));
+        if (params.onDown) {
+          params.onDown(chunk, allLength);
           return;
         }
         chunks.push(chunk);
         size += chunk.length;
       });
       response.on('end', () => {
-        if (response.statusCode >= 400) {
-          reject(new Error('error'));
+        if (response.statusCode && response.statusCode >= 400) {
+          reject(new Error(response.statusCode + ''));
           return;
         }
         let result: unknown;
-        if (params.onDownload) {
+        if (params.onDown) {
           result = {
             msg: 'downloaded',
-            length: Number(response.headers['content-length'] || 0)
+            allLength
           };
-        } else {
-          result = Buffer.concat(chunks, size);
-        }
+        } else result = Buffer.concat(chunks, size);
         if (params.isHeaders) resolve({ data: result, headers: response.headers });
         else resolve(result);
       });
-    });
+    }
+    const request = requestInit(url, params.args, ing);
+    request.on('destroyed', () => reject(new Error('destroy')));
+    request.on('error', (err) => reject(err));
+    for (const header in headers) request.setHeader(header, headers[header] as string);
+    if (params.data && params.method !== 'GET') {
+      if (typeof params.data !== 'string') {
+        const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
+        request.write(data);
+      } else request.write(params.data);
+    }
     request.end();
-    if (params.onRequest) params.onRequest(request);
-    if (!params.isDownload) setTimeout(() => request.abort(), params.timeout || app.timeout);
   });
 }
-
 
 /**
  * 请求
  * @param url
  * @param params
  */
-export default function request<T>(url: string, params: NetOpt = {}): Promise<T> {
-  if (app.enable) {
-    if (!url.startsWith('http://') && !url.startsWith('https://'))
-      url = app.url + url
-  }
-  else if (!url.startsWith('http://') && !url.startsWith('https://'))
-    url = 'https://' + url
-  let sendData: ClientRequestConstructorOptions = {
-    url,
-    method: params.method || 'GET'
-  };
-  if (!params.isUpload && params.data && sendData.method === 'GET') {
-    sendData.url += `?${queryParams(params.data)}`;
-  }
-  if (params.isUpload) {
-    return upload(sendData, params) as Promise<T>;
-  }
-  if (params.isDownload) {
-    return download(sendData, params) as Promise<T>;
-  }
+export default function request<T>(url: string, params: RequestOpt = {}): Promise<T> {
   return new Promise((resolve, reject) => {
-    const headers = Object.assign(
-      {
-        'content-type': 'application/json;charset=utf-8'
-      },
-      params.headers
-    );
+    params.method = params.method || 'GET';
+    params.args = params.args || { method: params.method };
     if (!params.type) params.type = 'JSON';
+    if (!params.timeout) params.timeout = 1000 * 60;
+    if (!params.args.method) params.args.method = params.method;
+    if (params.data && params.method === 'GET') url += `?${queryParams(params.data)}`;
+    const headers = params.headers || { 'content-type': 'application/json;charset=utf-8' };
     let chunks: Buffer[] = [];
     let size: number = 0;
-    const request = net.request(sendData);
-    for (const header in headers) request.setHeader(header, headers[header]);
-    request.on('abort', () => {
-      reject(new Error('abort'));
-    });
-    request.on('error', (err) => {
-      reject(err);
-    });
-    request.on('response', (response) => {
+    function ing(response: IncomingMessage) {
       response.on('data', (chunk) => {
         chunks.push(chunk);
         size += chunk.length;
       });
       response.on('end', () => {
         const data = Buffer.concat(chunks, size);
-        if (response.statusCode >= 400) {
+        if (response.statusCode && response.statusCode >= 400) {
           reject(new Error(data.toString()));
           return;
         }
@@ -224,16 +241,17 @@ export default function request<T>(url: string, params: NetOpt = {}): Promise<T>
         if (params.isHeaders) resolve({ data: result, headers: response.headers } as unknown as T);
         else resolve(result as unknown as T);
       });
-    });
-    if (params.data && sendData.method !== 'GET') {
-      const data = params.isStringify
-        ? queryParams(params.data)
-        : JSON.stringify(params.data);
-      if (typeof params.data !== 'string') request.write(data);
-      else request.write(data);
+    }
+    const request = requestInit(url, params.args, ing);
+    request.on('destroyed', () => reject(new Error('destroy')));
+    request.on('error', (err) => reject(err));
+    for (const header in headers) request.setHeader(header, headers[header] as string);
+    if (params.data && params.method !== 'GET') {
+      if (typeof params.data !== 'string') {
+        const data = params.isStringify ? queryParams(params.data) : JSON.stringify(params.data);
+        request.write(data);
+      } else request.write(params.data);
     }
     request.end();
-    if (params.onRequest) params.onRequest(request);
-    setTimeout(() => request.abort(), params.timeout || app.timeout);
   });
 }

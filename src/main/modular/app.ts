@@ -1,12 +1,11 @@
 import { app, ipcMain, shell } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/general/log';
-import Shortcut from '@/main/modular/enhance/shortcut';
 import Window from '@/main/modular/window';
 import { isNull } from '@/util';
 
-const { single } = require('@/cfg/window.json');
-const { initRoute } = require('@/cfg/window.json');
+import { isDisableHardwareAcceleration, isSecondInstanceWin } from '@/cfg/app.json';
+import { customize, opt } from '@/cfg/window.json';
 
 export class App {
   private static instance: App;
@@ -19,6 +18,24 @@ export class App {
   }
 
   constructor() { }
+
+  private uring(module: any) {
+    this.modular[module.name] = new module();
+    this.modular[module.name].on();
+  }
+
+  /**
+   * 挂载模块
+   * @param mod
+   */
+  async use(mod: any | any[] | Promise<any>[]) {
+    if (!Array.isArray(mod)) {
+      const module = mod.prototype ? mod : (await mod()).default;
+      this.uring(module);
+      return;
+    }
+    (await Promise.all(mod)).forEach((module) => this.uring(module.default || module));
+  }
 
   /**
    * 启动主进程
@@ -35,43 +52,20 @@ export class App {
     this.afterOn();
   }
 
-  /**
-   * 挂载模块
-   * @param mod
-   */
-  async use(mod: Promise<any> | Promise<any>[]) {
-    if (Array.isArray(mod)) {
-      await Promise.all(mod)
-        .then((res) => {
-          for (let i = 0, len = res.length; i < len; i++) {
-            this.modular[res[i].default.name] = new res[i].default();
-            this.modular[res[i].default.name].on();
-          }
-        })
-        .catch(logError);
-    } else {
-      await mod
-        .then((req) => {
-          this.modular[req.default.name] = new req.default();
-          this.modular[req.default.name].on();
-        })
-        .catch(logError);
-    }
-  }
-
-
 
 
   /**
    * 监听
    */
   beforeOn() {
+    //关闭硬件加速
+    isDisableHardwareAcceleration && app.disableHardwareAcceleration();
     // 默认单例根据自己需要改
     if (!app.requestSingleInstanceLock()) app.quit();
     else {
       app.on('second-instance', (event, argv) => {
         // 当运行第二个实例时,将会聚焦到main窗口
-        if (single) {
+        if (isSecondInstanceWin) {
           const main = Window.getMain();
           if (main) {
             if (main.isMinimized()) main.restore();
@@ -80,12 +74,15 @@ export class App {
           }
           return;
         }
-        Window.create({
-          customize: {
-            route: initRoute,
+        Window.create(
+          {
+            ...customize,
             argv
+          },
+          {
+            ...opt
           }
-        });
+        );
       });
     }
     // 渲染进程崩溃监听
@@ -113,24 +110,30 @@ export class App {
   afterOn() {
     // darwin
     app.on('activate', () => {
-      if (Window.getAll().length === 0) Window.create();
+      if (Window.getAll().length === 0) Window.create(customize, opt);
     });
     // 获得焦点时发出
     app.on('browser-window-focus', () => {
       // 注册窗体重新加载,方便调试,不需要可将其关闭
-      Shortcut.register_id({
-        id: 0,
-        key: 'CommandOrControl+R',
-        callback: () => {
-          //重新加载
-          if (!app.isPackaged) Window.getAll().forEach(x => x.reload())
-        }
-      });
+      // Shortcut.register_id({
+      //   id: 0,
+      //   key: 'CommandOrControl+R',
+      //   callback: () => {
+      //   }
+      // });
     });
     // 失去焦点时发出
     app.on('browser-window-blur', () => {
       // 注销窗体重新加载
-      Shortcut.unregister_id(0);
+      // Shortcut.unregister_id(0);
+    });
+    //app常用信息
+    ipcMain.handle('app-info-get', (event, args) => {
+      return {
+        isPackaged: app.isPackaged,
+        name: app.name,
+        version: app.getVersion()
+      };
     });
     //app常用获取路径
     ipcMain.handle('app-path-get', (event, args) => {

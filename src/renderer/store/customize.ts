@@ -1,7 +1,7 @@
 class CustomizeData {
   private static instance: CustomizeData;
 
-  public data: Customize;
+  private data!: Customize;
 
   static getInstance() {
     if (!CustomizeData.instance) CustomizeData.instance = new CustomizeData();
