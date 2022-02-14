@@ -1,7 +1,7 @@
 import net from "../enhance/net-request"
 import { JSDOM } from "jsdom";
-import { random } from "@/lib/util";
-import pageUtil from "@/lib/util/page.util";
+import { random } from "@/util";
+import pageUtil from "@/util/page.util";
 
 
 export async function pupImg(name: string) {

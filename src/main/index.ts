@@ -8,7 +8,6 @@ import { fileOn } from './modular/general/file';
 import Shortcut from "./modular/enhance/shortcut";
 import { xpsOn } from './xps/toRenderer';
 import { shortcutRegister, windowRegister } from './xps/toMain';
-
 await App.start();
 // 主要模块
 Global.on();//全局模块
@@ -25,8 +24,6 @@ await App.use([
   import('./modular/general/session'),
   import('./modular/additional/dialog'),
   import('./modular/additional/menu'),
-  import('./modular/enhance/update'),
-  import('./modular/enhance/socket'),
 ]);
 
 await windowRegister()

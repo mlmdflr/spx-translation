@@ -1,5 +1,5 @@
-import { isNull } from "@/lib/util"
-import sleep from "@/lib/util/sleep"
+import { isNull } from "@/util"
+import sleep from "@/util/sleep"
 import { readFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
@@ -15,7 +15,7 @@ export type cfg = { wifekeyword: string, ggopacity: number, winopacity: number, 
  * @returns 配置文件
  */
 const getJson = async () => {
-  return JSON.parse(await readFile(Global.getExternPath('gg.json'), { encoding: 'utf-8' }) as string) as cfg
+  return JSON.parse(await readFile(Global.getResourcesPath("extern", 'gg.json'), { encoding: 'utf-8' }) as string) as cfg
 }
 
 /**
@@ -52,7 +52,7 @@ const init = async (windowId: number | bigint, time?: number) => {
 
 
   //开始加载显示窗体
-  Window.get(windowId).webContents.once('did-start-loading',()=>{
+  Window.get(windowId).webContents.once('did-start-loading', () => {
     Window.get(windowId).webContents.executeJavaScript(`
       window.ipc.send('window-func', { type: 'show' });
     `)
@@ -62,11 +62,11 @@ const init = async (windowId: number | bigint, time?: number) => {
   Window.get(windowId).webContents.once('dom-ready', async () => {
     Window.get(windowId).webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
-          ${await readFile(Global.getExternPath('.gg1js'))}
+          ${await readFile(Global.getResourcesPath("extern", '.gg1js'))}
         `)
     // 首次注入css
     Window.get(windowId).webContents.insertCSS(`
-              ${await readFile(Global.getExternPath('.gg1css'))}
+              ${await readFile(Global.getResourcesPath("extern",'.gg1css'))}
               .T4LgNb{
                 opacity: ${(await getJson()).ggopacity};
               }

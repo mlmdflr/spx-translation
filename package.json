@@ -1,7 +1,7 @@
 {
   "name": "xps-google-translate",
   "productName": "魔改谷歌翻译",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "基于xp系统强化组织旗下 electron-vue3 和 谷歌翻译web 开发",
   "main": "dist/js/main.js",
   "author": {
@@ -13,34 +13,30 @@
     "dev": "node build/script/cfg.js && node build/script/dev.js",
     "rebuild": "electron-rebuild -f",
     "updcfg": "node build/script/cfg.js",
-    "build:win": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --win",
-    "build:linux": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --linux",
-    "build:mac": "node build/script/cfg.js && node build/script/build.js && electron-builder -c build/cfg/build.json --mac",
+    "build": "node build/script/cfg.js && node build/script/build.js",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.113",
-    "@types/jsdom": "^16.2.13",
-    "css-loader": "^6.5.1",
-    "electron": "^16.0.2",
-    "electron-builder": "^22.14.5",
+    "@swc/core": "^1.2.139",
+    "@types/jsdom": "^16.2.14",
+    "css-loader": "^6.6.0",
+    "electron": "^17.0.0",
+    "electron-builder": "^22.14.13",
     "electron-rebuild": "^3.2.5",
     "html-webpack-plugin": "^5.5.0",
-    "mini-css-extract-plugin": "^2.4.5",
-    "sass": "^1.43.5",
-    "sass-loader": "^12.3.0",
+    "mini-css-extract-plugin": "^2.5.3",
+    "sass": "^1.19.7",
+    "sass-loader": "^12.4.0",
     "swc-loader": "^0.1.15",
     "typescript": "^4.5.2",
-    "vue": "^3.2.22",
-    "vue-loader": "^16.8.3",
+    "vue": "^3.2.31",
+    "vue-loader": "^17.0.0",
     "vue-router": "^4.0.12",
-    "webpack": "^5.64.4",
-    "webpack-dev-server": "^4.6.0"
+    "webpack": "^5.68.0",
+    "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
-    "electron-updater": "^4.6.1",
-    "element-plus": "^1.2.0-beta.3",
-    "jsdom": "^18.1.1",
-    "socket.io-client": "^4.4.0"
+    "element-plus": "^2.0.1",
+    "jsdom": "^19.0.0"
   }
 }

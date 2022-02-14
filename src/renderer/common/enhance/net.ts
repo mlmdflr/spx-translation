@@ -1,4 +1,4 @@
-import { queryParams } from "@/lib/util";
+import { queryParams } from "@/util";
 const { app } = require('@/cfg/net.json');
 
 
