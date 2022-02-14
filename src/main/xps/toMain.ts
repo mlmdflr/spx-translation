@@ -1,4 +1,4 @@
-
+//@ts-nocheck
 import Window from '../modular/window';
 import Shortcut from "../modular/enhance/shortcut";
 import { getJson, init } from ".";
@@ -37,14 +37,14 @@ export function shortcutRegister() {
                 if (Window.get(0).isFocused() && Window.get(0).isVisible()) {
                     Window.create(
                         {
+                            id: 1,
+                            title: '设置',
+                            route: '/configure',
+                            parentId: 0,
+                            data: await getJson()
+                        },
+                        {
                             opacity: (await getJson()).winopacity,
-                            customize: {
-                                id: 1,
-                                title: '设置',
-                                route: '/configure',
-                                parentId: 0,
-                                data: await getJson()
-                            },
                             height: 400,
                             width: 600,
                             modal: true,
@@ -71,25 +71,25 @@ export async function windowRegister() {
         case 1:
             Window.create(
                 {
+                    id: 0,
+                    url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
+                },
+                {
                     opacity: (await getJson()).winopacity,
                     frame: false,
-                    customize: {
-                        id: 0,
-                        url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
-                    }
-                }   
+                }
             );
             await init(0)
             break;
         case 2:
             Window.create(
                 {
+                    id: 0,
+                    url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
+                },
+                {
                     opacity: (await getJson()).winopacity,
                     frame: false,
-                    customize: {
-                        id: 0,
-                        url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
-                    }
                 }
             );
             await init(0)
@@ -107,12 +107,12 @@ export async function windowRegister() {
                     case 1:
                         Window.create(
                             {
+                                id: 0,
+                                url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
+                            },
+                            {
                                 opacity: (await getJson()).ggopacity,
-                                frame: false,
-                                customize: {
-                                    id: 0,
-                                    url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
-                                }
+                                frame: false
                             }
                         );
                         await init(0)
@@ -120,12 +120,12 @@ export async function windowRegister() {
                     case 2:
                         Window.create(
                             {
+                                id: 0,
+                                url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
+                            },
+                            {
                                 opacity: (await getJson()).ggopacity,
-                                frame: false,
-                                customize: {
-                                    id: 0,
-                                    url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
-                                }
+                                frame: false
                             }
                         );
                         await init(0)

@@ -10,7 +10,7 @@ import { join } from 'path';
 import testIcon from '@/assets/icon/test.png';
 
 export default class Menus {
-  constructor() { }
+  constructor() {}
 
   /**
    * 监听
@@ -29,7 +29,7 @@ export default class Menus {
       ];
       const menu = Menu.buildFromTemplate(template);
       menu.popup({
-        window: BrowserWindow.fromWebContents(event.sender)
+        window: BrowserWindow.fromWebContents(event.sender) as BrowserWindow
       });
     });
   }

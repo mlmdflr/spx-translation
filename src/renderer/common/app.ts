@@ -1,13 +1,4 @@
 /**
- * 发送ipc消息
- * @param key
- * @param value
- */
-export function ipcSend(key: string, value?: unknown) {
-  window.ipc.send(key, value);
-}
-
-/**
  * 日志(info)
  * @param args
  */
@@ -47,25 +38,30 @@ export async function getGlobal<T>(key: string): Promise<T> {
  * 获取内部依赖文件路径(！文件必须都存放在lib/inside 针对打包后内部依赖文件路径问题)
  * */
 export async function getInsidePath(path?: string): Promise<string> {
-  return window.ipc.invoke('global-inside-path-get', path);
+  return window.ipc.invoke('global-resources-path-get', { type: 'inside', path });
 }
 
 /**
  * 获取外部依赖文件路径(！文件必须都存放在lib/extern下 针对打包后外部依赖文件路径问题)
  * */
-export async function getExternPath(path: string): Promise<string> {
-  return window.ipc.invoke('global-extern-path-get', path);
+export async function getExternPath(path?: string): Promise<string> {
+  return window.ipc.invoke('global-resources-path-get', { type: 'extern', path });
 }
 
 /**
- * 获取顶层文件路径
+ * 获取顶层依赖文件路径
  * @param path 
  */
-export async function getRootPath(path: string): Promise<string> {
-  return window.ipc.invoke('global-root-path-get', path);
+export async function getRootPath(path?: string): Promise<string> {
+  return window.ipc.invoke('global-resources-path-get', { type: 'root', path });
 }
-
-
+/**
+ * 获取顶层平台依赖文件路径
+ * @param path 
+ */
+export async function getPlatformPath(path?: string): Promise<string> {
+  return window.ipc.invoke('global-resources-path-get', { type: 'platform', path });
+}
 
 /**
  * app重启
@@ -84,12 +80,20 @@ export function launch(once?: boolean): boolean {
 }
 
 /**
+ * app常用信息
+ * @returns
+ */
+export async function getAppInfo(): Promise<AppInfo> {
+  return window.ipc.invoke('app-info-get');
+}
+
+
+/**
  * app常用获取路径
  */
 export async function getAppPath(key: string): Promise<string> {
   return window.ipc.invoke('app-path-get', { key });
 }
-
 
 /**
  * app打开url
@@ -97,5 +101,3 @@ export async function getAppPath(key: string): Promise<string> {
 export async function openUrl(url: string): Promise<void> {
   return window.ipc.invoke('app-open-url', { url });
 }
-
-

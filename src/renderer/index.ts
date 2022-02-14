@@ -1,17 +1,17 @@
 import { createApp } from 'vue';
 import customize from '@/renderer/store/customize';
 import { windowLoad } from '@/renderer/common/window';
-import { domPropertyLoad } from '@/renderer/common/general/dom';
 import App from '@/renderer/views/app.vue';
 import router from '@/renderer/router';
+import Head from "@/renderer/views/components/head/index.vue";
 import 'element-plus/dist/index.css'
 
-windowLoad((_, args) => {
+windowLoad(async (_, args) => {
   router.addRoute({
     path: '/',
-    redirect: args.route
+    redirect: (args as Customize_Route).route as string
   });
   customize.set(args);
-  domPropertyLoad();
-  createApp(App).use(router).mount('#app');
+  document.body.setAttribute('platform', window.environment.platform);
+  createApp(App).component("Head", Head).use(router).mount('#app');
 }); 

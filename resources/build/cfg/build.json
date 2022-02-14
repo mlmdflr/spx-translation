@@ -1,14 +1,14 @@
 {
   "compression": "maximum",
-  "productName": "xps-google-translate",
-  "appId": "org.xps-google-translate",
+  "productName": "xps-google-translation",
+  "appId": "org.xps-google-translation",
   "copyright": "MIT",
   "asar": true,
   "directories": {
     "output": "out"
   },
   "files": [
-    "dist/**/*",
+    "dist/",
     {
       "from": "resources/inside",
       "to": "inside/",
@@ -28,15 +28,15 @@
     "perMachine": true,
     "allowElevation": true,
     "allowToChangeInstallationDirectory": true,
-    "installerIcon": "build/icons/icon.ico",
-    "uninstallerIcon": "build/icons/unicon.ico",
-    "installerHeaderIcon": "build/icons/icon.ico",
-    "installerSidebar": "build/icons/modern-wizard.bmp",
-    "uninstallerSidebar": "build/icons/modern-wizard.bmp",
+    "installerIcon": "resources/build/icons/icon.ico",
+    "uninstallerIcon": "resources/build/icons/unicon.ico",
+    "installerHeaderIcon": "resources/build/icons/icon.ico",
+    "installerSidebar": "resources/build/icons/modern-wizard.bmp",
+    "uninstallerSidebar": "resources/build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "xps-google-translate",
-    "include": "build/cfg/installer.nsh",
+    "shortcutName": "xps-google-translation",
+    "include": "resources/build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
   },
@@ -56,25 +56,24 @@
     ]
   },
   "mac": {
-    "icon": "build/icons/icon.icns"
+    "icon": "resources/build/icons/icon.icns"
   },
   "win": {
-    "icon": "build/icons/icon.ico",
+    "icon": "resources/build/icons/icon.ico",
     "requestedExecutionLevel": "asInvoker",
     "target": [
       {
-        "target": "portable",
+        "target": "nsis",
         "arch": [
-          "x64",
           "ia32"
         ]
       }
     ]
   },
   "linux": {
-    "icon": "build/icons",
+    "icon": "resources/build/icons",
     "target": "AppImage",
-    "executableName": "xps-google-translate"
+    "executableName": "xps-google-translation"
   },
   "npmRebuild": true,
   "publish": [
@@ -87,6 +86,13 @@
     {
       "from": "resources/extern",
       "to": "extern/",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "resources/platform/win32",
+      "to": "platform/win32",
       "filter": [
         "**/*"
       ]

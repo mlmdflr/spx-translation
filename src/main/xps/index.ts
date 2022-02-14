@@ -1,4 +1,4 @@
-import { isNull } from "@/util"
+//@ts-nocheck
 import sleep from "@/util/sleep"
 import { readFile } from "../modular/general/file"
 import Global from "../modular/general/global";
@@ -24,7 +24,7 @@ const getJson = async () => {
  * @param time 延迟时间
  */
 const init = async (windowId: number | bigint, time?: number) => {
-  if (!isNull(time)) {
+  if (time !== undefined) {
     await sleep(time)
   }
 
@@ -34,14 +34,13 @@ const init = async (windowId: number | bigint, time?: number) => {
     logInfo(`[did-fail-load]\n`, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId)
     if (validatedURL === "https://translate.google.com/?sl=auto&tl=zh-CN" || validatedURL === "https://translate.google.cn/?sl=auto&tl=zh-CN") {
       Window.create({
+        id: 3,
+        title: '加载失败',
+        route: '/notify',
+        parentId: 0,
+        data: { code: errorCode, msg: errorDescription, url: validatedURL }
+      }, {
         opacity: (await getJson()).winopacity,
-        customize: {
-          id: 3,
-          title: '加载失败',
-          route: '/notify',
-          parentId: 0,
-          data: { code: errorCode, msg: errorDescription, url: validatedURL }
-        },
         height: 230,
         width: 600,
         modal: true,
@@ -66,7 +65,7 @@ const init = async (windowId: number | bigint, time?: number) => {
         `)
     // 首次注入css
     Window.get(windowId).webContents.insertCSS(`
-              ${await readFile(Global.getResourcesPath("extern",'.gg1css'))}
+              ${await readFile(Global.getResourcesPath("extern", '.gg1css'))}
               .T4LgNb{
                 opacity: ${(await getJson()).ggopacity};
               }

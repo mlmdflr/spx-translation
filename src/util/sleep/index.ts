@@ -19,7 +19,7 @@ export default function sleep<T>(duration: number, value?: T): Promise<T> {
     durationInMilliseconds = duration;
     return new Promise((resolve): any =>
         setTimeout(() => {
-            resolve(value);
+            resolve(value as T);
         }, durationInMilliseconds)
     );
 }

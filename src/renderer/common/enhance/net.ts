@@ -1,6 +1,4 @@
 import { queryParams } from "@/util";
-const { app } = require('@/cfg/net.json');
-
 
 export interface NetOpt extends RequestInit {
   isStringify?: boolean; //是否stringify参数（非GET请求使用）
@@ -88,15 +86,10 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param param
  */
 export async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
-  if (app.enable) {
-    if (!url.startsWith('http://') && !url.startsWith('https://'))
-      url = app.url + url
-  }
-  else if (!url.startsWith('http://') && !url.startsWith('https://'))
+  if (!url.startsWith('http://') && !url.startsWith('https://'))
     url = 'https://' + url
-
-  let abort: TimeOutAbort = null;
-  if (!param.signal) abort = timeOutAbort(param.timeout || app.timeout);
+  let abort: TimeOutAbort | null = null;
+  if (!param.signal) abort = timeOutAbort(param.timeout || 3000);
   let sendData: NetOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,

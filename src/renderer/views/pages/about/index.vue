@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { windowCreate, windowShow } from '@/renderer/common/window';
-import { openUrl } from '@/renderer/common';
+import { openUrl } from '@/renderer/common/app';
 import { ElImage, ElButton } from 'element-plus'
 import Head from "@/renderer/views/components/head/index.vue";
 
