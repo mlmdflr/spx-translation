@@ -1,4 +1,4 @@
-import { dialog, ipcMain, clipboard, nativeImage, BrowserWindow, BrowserView, desktopCapturer } from 'electron'
+import { dialog, ipcMain, clipboard, nativeImage, BrowserWindow, BrowserView, desktopCapturer, app } from 'electron'
 import type { SourcesOptions } from "electron";
 import fs from 'fs/promises'
 import Event from './event'
@@ -100,7 +100,6 @@ export default class Screenshots extends Events {
    */
   public setLang(lang: Partial<Lang>): void {
     this.isReady.then(() => {
-
       this.$view.webContents.send('SCREENSHOTS:setLang', lang)
     })
   }
@@ -140,13 +139,11 @@ export default class Screenshots extends Events {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
+        devTools: !app.isPackaged,
       }
     })
-
     this.$win.setBrowserView(this.$view)
     this.$view.setBounds(bound)
-
-
     this.$view.webContents.send('SCREENSHOTS:capture', display)
   }
 
@@ -154,16 +151,13 @@ export default class Screenshots extends Events {
    * 绑定ipc时间处理
    */
   private listenIpc(): void {
-
     ipcMain.handle('SCREENSHOTS:getSources', async (e, sourcesOptions: SourcesOptions) => {
       return await desktopCapturer.getSources(sourcesOptions)
     })
-    
     /**
      * OK事件
      */
     ipcMain.on('SCREENSHOTS:ok', (e, buffer: Buffer, bounds: Bounds) => {
-
       const event = new Event()
       this.emit('ok', event, buffer, bounds)
       if (event.defaultPrevented) {
@@ -176,7 +170,6 @@ export default class Screenshots extends Events {
      * CANCEL事件
      */
     ipcMain.on('SCREENSHOTS:cancel', () => {
-
       const event = new Event()
       this.emit('cancel', event)
       if (event.defaultPrevented) {
@@ -189,13 +182,11 @@ export default class Screenshots extends Events {
      * SAVE事件
      */
     ipcMain.on('SCREENSHOTS:save', async (e, buffer: Buffer, bounds: Bounds) => {
-
       const event = new Event()
       this.emit('save', event, buffer, bounds)
       if (event.defaultPrevented || !this.$win) {
         return
       }
-
       const time = new Date()
       const year = time.getFullYear()
       const month = padStart(time.getMonth() + 1, 2, '0')
@@ -204,14 +195,11 @@ export default class Screenshots extends Events {
       const minutes = padStart(time.getMinutes(), 2, '0')
       const seconds = padStart(time.getSeconds(), 2, '0')
       const milliseconds = padStart(time.getMilliseconds(), 3, '0')
-
       this.$win.setAlwaysOnTop(false)
-
       const { canceled, filePath } = await dialog.showSaveDialog(this.$win, {
         title: '保存图片',
         defaultPath: `${year}${month}${date}${hours}${minutes}${seconds}${milliseconds}.png`
       })
-
       if (!this.$win) {
         return
       }
@@ -219,7 +207,6 @@ export default class Screenshots extends Events {
       if (canceled || !filePath) {
         return
       }
-
       await fs.writeFile(filePath, buffer)
       this.endCapture()
     })

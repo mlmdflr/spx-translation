@@ -75,6 +75,7 @@ export async function windowRegister() {
                     url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
                 },
                 {
+                    show: false,
                     opacity: (await getJson()).winopacity,
                     frame: false,
                 }
@@ -88,6 +89,7 @@ export async function windowRegister() {
                     url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
                 },
                 {
+                    show: false,
                     opacity: (await getJson()).winopacity,
                     frame: false,
                 }
@@ -111,6 +113,7 @@ export async function windowRegister() {
                                 url: 'https://translate.google.cn/?sl=auto&tl=zh-CN',
                             },
                             {
+                                show: false,
                                 opacity: (await getJson()).ggopacity,
                                 frame: false
                             }
@@ -124,6 +127,7 @@ export async function windowRegister() {
                                 url: 'https://translate.google.com/?sl=auto&tl=zh-CN'
                             },
                             {
+                                show: false,
                                 opacity: (await getJson()).ggopacity,
                                 frame: false
                             }

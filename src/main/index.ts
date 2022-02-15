@@ -6,7 +6,6 @@ import { logOn } from './modular/general/log';
 import { pathOn } from './modular/general/path';
 import { fileOn } from './modular/general/file';
 import Shortcut from "./modular/enhance/shortcut";
-import { customize, opt } from '@/cfg/window.json';
 
 import Session from './modular/general/session';
 import Dialog from './modular/additional/dialog';
@@ -15,6 +14,8 @@ import Menu from './modular/additional/menu';
 import { xpsOn } from './xps/toRenderer';
 import { shortcutRegister, windowRegister } from './xps/toMain';
 import xs from "./xps/xps_screenshots";
+import xt from "./xps/xps_tesseract";
+import request from './modular/enhance/net-request';
 
 await App.start();
 // 主要模块
@@ -28,7 +29,7 @@ logOn();//日志模块
 fileOn();//文件模块
 pathOn();//路径模块
 
-await App.use([Session, Dialog, Menu, xs]);
+await App.use([Session, Dialog, Menu, xs,xt]);
 
 
 await windowRegister()
@@ -36,6 +37,7 @@ await windowRegister()
 shortcutRegister()
 
 xpsOn()
+
 
 // 托盘
 Tray.create();
