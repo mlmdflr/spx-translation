@@ -29,15 +29,13 @@ logOn();//日志模块
 fileOn();//文件模块
 pathOn();//路径模块
 
-await App.use([Session, Dialog, Menu, xs,xt]);
-
-
-await windowRegister()
-
-shortcutRegister()
+// 托盘
+Tray.create();
 
 xpsOn()
 
+await App.use([Session, Dialog, Menu, xs, xt]);
 
-// 托盘
-Tray.create();
+await windowRegister()
+
+await shortcutRegister()

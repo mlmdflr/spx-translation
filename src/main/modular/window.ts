@@ -191,7 +191,7 @@ export class Window {
   create(customize: Customize, opt: BrowserWindowConstructorOptions) {
     if ('route' in customize && !customize.isOpenMultiWindow) {
       for (const i of this.getAll()) {
-        if ('route' in i.customize && customize.route && customize.route === i.customize.route) {
+        if (i.customize && 'route' in i.customize && customize.route && customize.route === i.customize.route) {
           i.focus();
           return;
         }

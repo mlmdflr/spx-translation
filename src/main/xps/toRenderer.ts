@@ -1,19 +1,10 @@
-//@ts-nocheck
-import { ipcMain } from "electron"
-import { writeFile } from "../modular/general/file"
-import Global from "../modular/general/global"
+import { BrowserWindow, ipcMain } from "electron"
 import { logError } from "../modular/general/log";
 import { getSearchCount, pupImg } from "../modular/pup"
 import Window from '../modular/window';
-import { getJson, init } from ".";
-import type { cfg } from ".";
+import { getJson, setCfg, init } from ".";
 import Shortcut from "../modular/enhance/shortcut";
 
-
-
-function setCfg(args: cfg): Promise<unknown> {
-  return writeFile(Global.getResourcesPath('extern', 'gg.json'), JSON.stringify(args), { encoding: 'utf-8' })
-}
 
 
 export const xpsOn = () => {
@@ -29,7 +20,7 @@ export const xpsOn = () => {
    */
   ipcMain.handle('switch-background', async (event, args) => {
     pupImg((await getJson()).wifekeyword).then(res => {
-      Window.get(0).webContents.insertCSS(`
+      (Window.get(0) as BrowserWindow).webContents.insertCSS(`
           #yDmH0d{
             background-size:100% 100%;
             background-position: center;
@@ -52,7 +43,7 @@ export const xpsOn = () => {
    */
   ipcMain.handle('updateCfg', (event, args) => {
     setCfg(args).then(res => {
-      Window.get(0).webContents.insertCSS(`
+      (Window.get(0) as BrowserWindow).webContents.insertCSS(`
           .T4LgNb{
             opacity: ${args.ggopacity};
           }
@@ -60,9 +51,9 @@ export const xpsOn = () => {
             background: white;
             opacity: ${args.ggopacity};
           }
-      `)
+      `);
       // 修改窗体的透明度
-      Window.get(0).setOpacity(args.winopacity)
+      (Window.get(0) as BrowserWindow).setOpacity(args.winopacity)
     }).catch(err => {
       logError("[updateCfg]", err)
     })
@@ -85,8 +76,8 @@ export const xpsOn = () => {
    * 向渲染进程提供全屏事件
    */
   ipcMain.handle('full-screen', () => {
-    if (Window.get(0).fullScreen) Window.get(0).setFullScreen(false)
-    else Window.get(0).setFullScreen(true)
+    if ((Window.get(0) as BrowserWindow).fullScreen) (Window.get(0) as BrowserWindow).setFullScreen(false)
+    else (Window.get(0) as BrowserWindow).setFullScreen(true)
   })
 
 

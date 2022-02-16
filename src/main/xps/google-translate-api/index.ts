@@ -87,8 +87,6 @@ export default function translate(text: any, opts: googleTranslateApi): Promise<
             }, method: 'post'
         }
         return req<string>(url, gotopts).then(function (res) {
-            console.log(res.slice(6));
-
             var json = res.slice(6);
             var length = '';
 
@@ -125,8 +123,6 @@ export default function translate(text: any, opts: googleTranslateApi): Promise<
                 // translation not found, could be a hyperlink or gender-specific translation?
                 result.text = json[1][0][0][0];
             } else {
-                console.log(111, json[1][0][0][5]);
-
                 result.text = (json[1][0][0][5] as unknown as [])
                     .map(function (obj: any[]) {
                         return obj[0];
