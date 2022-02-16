@@ -1,13 +1,32 @@
 //@ts-nocheck
 import sleep from "@/util/sleep"
-import { readFile } from "../modular/general/file"
+import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
 import { pupImg } from "../modular/pup";
 import Window from '../modular/window';
 
 
-export type cfg = { wifekeyword: string, ggopacity: number, winopacity: number, default: number }
+type cfg = {
+  wifekeyword: string,
+  ggopacity: number,
+  winopacity: number,
+  default: number,
+  hotKey: {
+    showHied: string
+    screenshotTranslate: string
+    fastTranslate: string,
+    setUp: string
+  },
+  orc: {
+    lang: [],
+    worker: number
+  }
+}
+
+const setCfg = async (args: cfg) => {
+  return writeFile(Global.getResourcesPath('extern', 'gg.json'), JSON.stringify(args), { encoding: 'utf-8' })
+}
 
 
 /**
@@ -62,7 +81,7 @@ const init = async (windowId: number | bigint, time?: number) => {
     Window.get(windowId).webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
           ${await readFile(Global.getResourcesPath("extern", '.gg1js'))}
-        `).catch(()=>{})
+        `).catch(() => { })
     // 首次注入css
     Window.get(windowId).webContents.insertCSS(`
               ${await readFile(Global.getResourcesPath("extern", '.gg1css'))}
@@ -78,11 +97,11 @@ const init = async (windowId: number | bigint, time?: number) => {
                 background-color: var(--gm-fillbutton-container-color,#1a73e8);
                 opacity: ${(await getJson()).ggopacity};
               }
-        `).catch(()=>{});
+        `).catch(() => { });
     //注入魔改原有后的样式 记录,伪类无法直接注入
     Window.get(windowId).webContents.executeJavaScript(`
           document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
-        `).catch(()=>{})
+        `).catch(() => { })
     pupImg((await getJson()).wifekeyword).then(res => {
       Window.get(windowId).webContents.insertCSS(` 
                 #yDmH0d{
@@ -90,7 +109,7 @@ const init = async (windowId: number | bigint, time?: number) => {
                   background-position: center;
                   background-image: url('${res}');
                 } 
-            `).catch(()=>{})
+            `).catch(() => { })
     })
   })
 
@@ -127,7 +146,8 @@ const documInit = async (windowId: number | bigint) => {
           window.history.go(-1)
           window.ipc.invoke('init',0);
         }
-  `).catch(()=>{})
+  `).catch(() => { })
 }
 
-export { getJson, init, documInit }
+export { setCfg, getJson, init, documInit }
+export type { cfg }

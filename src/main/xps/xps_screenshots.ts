@@ -1,32 +1,62 @@
 import gShortcut from "@/main/modular/enhance/shortcut";
 import translate from "./google-translate-api";
-import window from "../modular/window";
+import Window from "../modular/window";
 import Screenshots from "./screenshots/screenshots";
 import tesseract from "./xps_tesseract";
+import { getJson } from ".";
+import { isNull } from "@/util";
+import { Snowflake } from "@/util/snowflake";
+import { logError } from "../modular/general/log";
+
 export default class screenshots {
-    on() {
+    async on() {
+        const cfg = await getJson();
         const screenshots = new Screenshots()
-        gShortcut.register_id({
-            id: 666,
-            key: 'CommandOrControl+Shift+E',
-            callback: () => {
-                window.get(0)?.hide()
-                screenshots.startCapture()
-            }
-        })
+
+        if (cfg.hotKey.screenshotTranslate) {
+            gShortcut.register_id({
+                id: 666,
+                key: cfg.hotKey.screenshotTranslate,
+                callback: () => {
+                    Window.get(0)?.hide()
+                    screenshots.startCapture()
+                }
+            })
+        }
 
         screenshots.on('ok', async (e, ib, b) => {
-            console.log('识别开始..');
-            const { data: { text } } = await new tesseract().orc(ib)
-            console.log('识别如下:', text);
-            console.log('翻译开始..');
-            translate(text, {
-                from: 'auto',
-                to: 'zh-CN',
-                tld: 'cn'
-            }).then(res => {
-                console.log(res.text);
+            const sid = new Snowflake(0n, 0n).nextId()
+            Window.create({
+                id: sid,
+                title: '翻译结果',
+                route: 'Translatefb',
+                isOpenMultiWindow: true
+            }, {
+                show: true,
+                height: 500,
+                width: 400,
+                maxHeight: 500,
+                maxWidth: 400
             })
+            try {
+                const { data: { text } } = await new tesseract().orc(ib)
+
+                Window.get(sid)?.webContents.send(`window-message-tesseract:ok:${sid}-back`, text)
+
+                translate(text, {
+                    from: 'auto',
+                    to: 'zh-CN',
+                    tld: isNull(cfg.default) ? 'cn' : (cfg.default === 2 ? 'com' : 'cn')
+                }).then(res => {
+                    Window.get(sid)?.webContents.send(`window-message-translate:ok:${sid}-back`, res.text)
+                }).catch(err => { throw err })
+            } catch (error) {
+                console.log(error);
+                setTimeout(() => {
+                    Window.get(sid)?.webContents.send(`window-message-translate:err:${sid}-back`, error)
+                }, 1000)
+                logError('[screenshots or Translate]', error)
+            }
         })
     }
 }

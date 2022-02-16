@@ -10,6 +10,11 @@ const Route: RouteRecordRaw[] = [
     path: '/notify',
     name: 'Notify',
     component: () => import('@/renderer/views/dialog/notify/index.vue')
+  },
+  {
+    path: '/translatefb',
+    name: 'Translatefb',
+    component: () => import('@/renderer/views/dialog/translatefb/index.vue')
   }
 ];
 

@@ -21,7 +21,7 @@
     "@types/jsdom": "^16.2.14",
     "@vue/compiler-sfc": "^3.2.30",
     "css-loader": "^6.6.0",
-    "electron": "17.0.0",
+    "electron": "17.0.1",
     "electron-builder": "^22.14.13",
     "electron-rebuild": "^3.2.7",
     "element-plus": "^2.0.1",
