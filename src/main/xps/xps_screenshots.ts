@@ -25,6 +25,7 @@ export default class screenshots {
         }
 
         screenshots.on('ok', async (e, ib, b) => {
+            if (!cfg.orc.open) return;
             const sid = new Snowflake(0n, 0n).nextId()
             Window.create({
                 id: sid,
