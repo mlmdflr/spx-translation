@@ -18,6 +18,9 @@ export default class tesseract {
 
     async on() {
         const cfg = await getJson()
+
+        if (!cfg.orc.open) throw Error('tesseract close')
+
         let lang = ''
         let workerLen = 3
         if (cfg.orc.lang && cfg.orc.lang.length !== 0) {
@@ -40,7 +43,7 @@ export default class tesseract {
         console.log('[tesseract info]', 'Ready');
         tesseract.getInstance().isOk = true
     }
-
+    
     async orc(img: Buffer) {
         if (tesseract.getInstance().isOk) return await tesseract.getInstance().scheduler.addJob('recognize', img)
         else throw Error('tesseract not')
