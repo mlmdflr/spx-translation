@@ -85,14 +85,20 @@ type WindowStatusOpt =
   | 'isFocused'
   | 'isModal';
 
-interface UpdateMessage {
-  code: number;
-  msg: string;
-  value?: any;
-}
-
-interface SocketMessage {
-  code: number;
-  msg?: string;
-  value?: any;
+type cfg = {
+  wifekeyword: string,
+  ggopacity: number,
+  winopacity: number,
+  default: number,
+  hotKey: {
+    showHied: string
+    screenshotTranslate: string
+    fastTranslate: string,
+    setUp: string
+  },
+  orc: {
+    lang: [],
+    worker: number,
+    open: boolean
+  }
 }

@@ -7,22 +7,6 @@ import { pupImg } from "../modular/pup";
 import Window from '../modular/window';
 
 
-type cfg = {
-  wifekeyword: string,
-  ggopacity: number,
-  winopacity: number,
-  default: number,
-  hotKey: {
-    showHied: string
-    screenshotTranslate: string
-    fastTranslate: string,
-    setUp: string
-  },
-  orc: {
-    lang: [],
-    worker: number
-  }
-}
 
 const setCfg = async (args: cfg) => {
   return writeFile(Global.getResourcesPath('extern', 'gg.json'), JSON.stringify(args), { encoding: 'utf-8' })

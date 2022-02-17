@@ -8,7 +8,7 @@
           <ElInput v-model="wifekeyword"></ElInput>
         </ElCol>
         <ElCol :span="4" :offset="2">
-          <ElButton plain size="medium" @click="testWifekeyword">搜索</ElButton>
+          <ElButton plain size="small" @click="testWifekeyword">搜索</ElButton>
         </ElCol>
       </ElRow>
       <ElDivider content-position="left">设置透明度</ElDivider>
@@ -48,6 +48,9 @@ import {
 import { ElSlider } from "element-plus";
 
 const argsData = customize.get();
+
+console.log(argsData);
+
 let wifekeyword = ref(argsData.data?.wifekeyword);
 let ggopacity = ref(argsData.data?.ggopacity);
 let winopacity = ref(argsData.data?.winopacity);
@@ -55,12 +58,11 @@ let _default = ref(argsData.data?.default);
 
 function close() {
   windowClose();
-  window.ipc.invoke('updateCfg', {
-    wifekeyword: wifekeyword.value,
-    ggopacity: ggopacity.value,
-    winopacity: winopacity.value,
-    default: _default.value
-  });
+  argsData.data.wifekeyword = wifekeyword.value
+  argsData.data.ggopacity = ggopacity.value;
+  argsData.data.winopacity = winopacity.value
+  argsData.data.default = _default.value
+  window.ipc.invoke('updateCfg',argsData.data);
 }
 
 function testWifekeyword() {
