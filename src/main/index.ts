@@ -15,7 +15,6 @@ import { xpsOn } from './xps/toRenderer';
 import { shortcutRegister, windowRegister } from './xps/toMain';
 import xs from "./xps/xps_screenshots";
 import xt from "./xps/xps_tesseract";
-import request from './modular/enhance/net-request';
 
 await App.start();
 // 主要模块
@@ -34,8 +33,6 @@ Tray.create();
 
 xpsOn()
 
-await App.use([Session, Dialog, Menu, xs, xt]);
-
 await windowRegister()
-
+await App.use([Session, Dialog, Menu, xs, xt]);
 await shortcutRegister()

@@ -8,7 +8,7 @@ import {
 } from 'electron';
 import { join } from 'path';
 import testIcon from '@/assets/icon/test.png';
-
+import win from "../window";
 export default class Menus {
   constructor() {}
 
@@ -16,21 +16,8 @@ export default class Menus {
    * 监听
    */
   on() {
-    ipcMain.on('menu-show', (event) => {
-      const template: Array<MenuItemConstructorOptions | MenuItem> = [
-        {
-          label: '右键弹框测试',
-          icon: nativeImage.createFromPath(join(__dirname, `../${testIcon}`)),
-          click: () => {
-            event.sender.send('menu-back', '邪王真眼是最强的');
-          }
-        },
-        { label: 'Menu Item 2', type: 'checkbox', checked: true }
-      ];
-      const menu = Menu.buildFromTemplate(template);
-      menu.popup({
-        window: BrowserWindow.fromWebContents(event.sender) as BrowserWindow
-      });
-    });
+     // 注销原始菜单
+     const menu = Menu.buildFromTemplate([]);
+     Menu.setApplicationMenu(menu)
   }
 }
