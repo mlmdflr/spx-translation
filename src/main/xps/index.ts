@@ -57,6 +57,7 @@ const init = async (windowId: number | bigint, time?: number) => {
   Window.get(windowId).webContents.once('did-start-loading', () => {
     Window.get(windowId).webContents.executeJavaScript(`
       window.ipc.send('window-func', { type: 'show' });
+      window.ipc.send('menu-show');
     `)
   })
 
