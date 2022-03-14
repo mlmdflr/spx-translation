@@ -21,14 +21,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.mjs/,
-        type: "javascript/auto",
-      },
-      {
-        test: /\.mjs/,
+        test: /\.(mjs)$/,
         resolve: {
-          fullySpecified: false,
+          fullySpecified: false
         },
+        include: /node_modules/,
+        type: "javascript/auto"
       },
       {
         test: /\.(tsx|jsx|ts|js)$/,

@@ -11,9 +11,9 @@ const Router = createRouter({
 });
 
 Router.beforeEach((to, from) => {
-  if (to.path !== customize.data.route) {
+  if (to.path !== (customize.get() as Customize_Route).route) {
     //更新窗口路由
-    customize.data.route = to.path;
+    (customize.get() as Customize_Route).route = to.path;
     windowUpdate();
   }
 });

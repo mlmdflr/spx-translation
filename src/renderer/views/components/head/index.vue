@@ -7,9 +7,9 @@
     <div v-else class="content">
       <div class="title">{{ title }}</div>
       <div v-if="eventShow" class="events">
-        <div @click="min" class="event min no-drag"></div>
-        <div @click="maxMin" class="event max-min no-drag"></div>
-        <div @click="close" class="event close no-drag"></div>
+        <div v-if="minShow" @click="min" class="event min no-drag"></div>
+        <div v-if="maxShow" @click="maxMin" class="event max-min no-drag"></div>
+        <div v-if="closeShow" @click="close" class="event close no-drag"></div>
       </div>
     </div>
   </div>
@@ -23,7 +23,19 @@ import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import customize from '@/renderer/store/customize';
 
 const props = defineProps({
-    eventShow: {
+  eventShow: {
+    type: Boolean,
+    default: true
+  },
+  closeShow: {
+    type: Boolean,
+    default: true
+  },
+  minShow: {
+    type: Boolean,
+    default: true
+  },
+  maxShow: {
     type: Boolean,
     default: true
   }
@@ -32,7 +44,7 @@ const props = defineProps({
 const isMacintosh = await getGlobal<string>('system.platform') === 'darwin';
 
 
-let title: string = customize.get().title || await getGlobal<string>('app.name')
+let title = customize.get().title
 
 function min() {
   windowMin();

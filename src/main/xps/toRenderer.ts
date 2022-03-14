@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron"
+import { BrowserWindow, ipcMain, session } from "electron"
 import { logError } from "../modular/general/log";
 import { getSearchCount, pupImg } from "../modular/pup"
 import Window from '../modular/window';
@@ -51,9 +51,10 @@ export const xpsOn = () => {
             background: white;
             opacity: ${args.ggopacity};
           }
+          .goog-container-vertical{
+            opacity: ${args.ggopacity};
+          }
       `);
-      // 修改窗体的透明度
-      (Window.get(0) as BrowserWindow).setOpacity(args.winopacity)
     }).catch(err => {
       logError("[updateCfg]", err)
     })
@@ -87,6 +88,34 @@ export const xpsOn = () => {
    */
   ipcMain.handle('unregisterAll', () => {
     Shortcut.unregisterAll()
+  })
+
+  //清除缓存
+  ipcMain.handle('clear:cache', () => {
+    session.defaultSession.clearCache()
+  })
+  //获取缓存大小
+  ipcMain.handle('get:cache', () => session.defaultSession.getCacheSize())
+
+  //打开设置窗体
+  ipcMain.handle('open:window', async () => {
+    Window.create(
+      {
+        id: 1,
+        route: '/configure',
+        parentId: 0,
+        data: await getJson()
+      },
+      {
+        height: 400,
+        width: 600,
+        modal: true,
+        maxHeight: 400,
+        maxWidth: 600,
+        maximizable: false,
+        minimizable: false
+      }
+    );
   })
 
 }

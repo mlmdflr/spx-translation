@@ -67,26 +67,41 @@ const init = async (windowId: number | bigint, time?: number) => {
           window.ipc.send('window-func', { type: 'show' });
           ${await readFile(Global.getResourcesPath("extern", '.gg1js'))}
         `).catch(() => { })
+    let json = await getJson()
     // 首次注入css
     Window.get(windowId).webContents.insertCSS(`
               ${await readFile(Global.getResourcesPath("extern", '.gg1css'))}
               .T4LgNb{
-                opacity: ${(await getJson()).ggopacity};
+                opacity: ${json.ggopacity};
               }
               .VfPpkd-Jh9lGc{
                 background: white;
-                opacity: ${(await getJson()).ggopacity};
+                opacity: ${json.ggopacity};
               }
               .VfPpkd-Jh9lGc1{
                 background-color: #1a73e8;
                 background-color: var(--gm-fillbutton-container-color,#1a73e8);
-                opacity: ${(await getJson()).ggopacity};
+                opacity: ${json.ggopacity};
+              }
+              .goog-container-vertical {
+                opacity:  ${json.ggopacity};
               }
         `).catch(() => { });
+        // 
+
     //注入魔改原有后的样式 记录,伪类无法直接注入
     Window.get(windowId).webContents.executeJavaScript(`
           document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
-        `).catch(() => { })
+          let sid =  setInterval(()=>{
+            if (document.styleSheets[7]) {
+              document.styleSheets[7].deleteRule(78)
+              document.styleSheets[7].deleteRule(79)
+              document.styleSheets[7].deleteRule(79)
+              document.styleSheets[7].insertRule('.ita-hwt-ime-st { position: fixed; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; border: 1px solid rgb(204, 204, 204); transition: opacity 0.1s linear 0s; z-index: 2147483640; }',0)
+              clearInterval(sid)
+            }
+          },200)
+          `).catch(() => { })
     pupImg((await getJson()).wifekeyword).then(res => {
       Window.get(windowId).webContents.insertCSS(` 
                 #yDmH0d{
@@ -105,34 +120,9 @@ const init = async (windowId: number | bigint, time?: number) => {
 
   //禁止一些页面内跳转
   Window.get(windowId).webContents.on('will-navigate', (event, url) => {
-    let tf = url.match(/translate_f/g)
-    if (!tf) {
-      event.preventDefault()
-    }
-    if (tf) {
-      documInit(windowId)
-    }
+    event.preventDefault()
   })
 }
 
-/**
- * 文档翻译页面注入初始化
- * @param windowId 窗口id
- */
-const documInit = async (windowId: number | bigint) => {
-  Window.get(windowId).webContents.executeJavaScript(`
-        let inputFHtml = document.createElement("input"); 
-        inputFHtml.type = "button"
-        inputFHtml.value = "返回"
-        inputFHtml.id = "buttonF"
-        inputFHtml.style = 'position: fixed;bottom: 20px;right: 20px;display: inline-block;margin-bottom: 0px;font-weight: normal;text-align: center;white-space: nowrap;vertical-align: middle;touch-action: manipulation;cursor: pointer;background-image: none;border: 1px solid transparent;padding: 6px 12px;font-size: 14px;line-height: 1.42857;border-radius: 4px;'
-        document.getElementsByTagName('body')[0].appendChild(inputFHtml); 
-        document.querySelector('#buttonF').onclick = function () {
-          window.history.go(-1)
-          window.ipc.invoke('init',0);
-        }
-  `).catch(() => { })
-}
-
-export { setCfg, getJson, init, documInit }
+export { setCfg, getJson, init }
 export type { cfg }
