@@ -1,16 +1,16 @@
 class CustomizeData {
   private static instance: CustomizeData;
 
-  private data!: Customize;
+  private data!: Customize_Route;
 
   static getInstance() {
     if (!CustomizeData.instance) CustomizeData.instance = new CustomizeData();
     return CustomizeData.instance;
   }
 
-  constructor() {}
+  constructor() { }
 
-  set(data: Customize) {
+  set(data: Customize_Route) {
     this.data = data;
   }
 

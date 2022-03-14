@@ -88,13 +88,11 @@ type WindowStatusOpt =
 type cfg = {
   wifekeyword: string,
   ggopacity: number,
-  winopacity: number,
   default: number,
   hotKey: {
     showHied: string
     screenshotTranslate: string
-    fastTranslate: string,
-    setUp: string
+    fastTranslate: string
   },
   orc: {
     lang: [],
