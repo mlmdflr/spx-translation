@@ -5,7 +5,7 @@
  * @param {string} chars
  * @param {number} length
  */
-export default function padStart (string: unknown, length = 0, chars = ' '): string {
+export default function padStart (string: unknown, length: number = 0, chars: string = ' '): string {
   let str = String(string)
   while (str.length < length) {
     str = `${chars}${str}`

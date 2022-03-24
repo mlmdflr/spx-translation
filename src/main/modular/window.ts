@@ -72,12 +72,19 @@ export function browserWindowInit(
   if ((customize.id !== undefined && customize.id !== null) && !Window.getInstance().checkId(customize.id as number | bigint)) customize.id = new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId()
 
   const win = new BrowserWindow(opt);
+
+  //win32 取消原生窗口右键事件
+  process.platform === 'win32' && win.hookWindowMessage(278, () => {
+    win.setEnabled(false)
+    win.setEnabled(true)
+  })
+
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  if (isParentId && parenWin) {
-    win.once('closed', () => {
-      parenWin?.focus()
-    })
-  }
+  if (isParentId) win.once('close', () => {
+    parenWin?.focus()
+  })
+
+
   win.customize = {
     id: new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId(),
     ...customize
@@ -122,12 +129,14 @@ async function load(win: BrowserWindow) {
 export class Window {
   private static instance: Window;
 
+  public winId_insertCSS: Map<string, string>
+
   static getInstance() {
     if (!Window.instance) Window.instance = new Window();
     return Window.instance;
   }
 
-  constructor() { }
+  constructor() { this.winId_insertCSS = new Map() }
 
   /**
    * 获取窗口
@@ -198,6 +207,11 @@ export class Window {
       }
     }
     const win = browserWindowInit(customize, opt);
+
+    // 模态框弹出父窗体模糊
+    if (win.isModal() && win.customize.parentId !== undefined) this.get(win.customize.parentId)?.webContents.insertCSS(`body{filter:blur(5px);}`).then((key) => Window.getInstance().winId_insertCSS.set((opt.parent?.customize?.id ?? 'default').toString(), key))
+
+
     // 路由 > html文件 > 网页
     if (!app.isPackaged) {
       //调试模式
@@ -375,6 +389,13 @@ export class Window {
         if (!win) {
           console.error(`not found win -> ${args}`);
           return;
+        }
+        //模态框关闭父窗体恢复
+        if (win.isModal() && win.customize.parentId !== undefined) {
+          let
+            parentWin = this.get(win.customize.parentId),
+            mapValue = Window.getInstance().winId_insertCSS.get((parentWin?.customize?.id ?? 'default').toString())
+          if (parentWin && mapValue) parentWin.webContents.removeInsertedCSS(mapValue)
         }
         if (main.customize.isMainWin && main.customize.id === win.customize.id) {
           this.func('close')
