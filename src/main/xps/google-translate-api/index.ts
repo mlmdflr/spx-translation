@@ -39,7 +39,7 @@ function extract(key: string, res: { body: string; }) {
     return '';
 }
 
-export default function translate(text: any, opts: googleTranslateApi): Promise<ITranslateResponse> {
+export default async function translate(text: any, opts: googleTranslateApi): Promise<ITranslateResponse> {
     let gotopts = {};
     var e: Error | undefined = undefined;
     [opts.from, opts.to].forEach(function (lang) {
