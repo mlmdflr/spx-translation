@@ -32,7 +32,7 @@ export default class tesseract {
             const worker = createWorker({
                 langPath: global.getResourcesPath('root', 'tesseract/langPath'),
                 cachePath: global.getResourcesPath('root', 'tesseract/cachePath'),
-                logger: m => logInfo('[tesseract info]', m),
+                // logger: m => logInfo('[tesseract info]', m),
                 errorHandler: err => logError('[tesseract error]', err)
             })
             tesseract.getInstance().scheduler.addWorker(worker);

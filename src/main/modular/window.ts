@@ -80,9 +80,7 @@ export function browserWindowInit(
   })
 
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
-  if (isParentId) win.once('close', () => {
-    parenWin?.focus()
-  })
+  if (isParentId) win.once('close', () => parenWin?.focus())
 
 
   win.customize = {
@@ -185,11 +183,7 @@ export class Window {
    * @param id 
    */
   checkId(id: number | bigint): boolean {
-    for (const wins of this.getAll()) {
-      if (wins.customize?.id === id) {
-        return false
-      }
-    }
+    for (const wins of this.getAll()) if (wins.customize?.id === id) return false
     return true
   }
 

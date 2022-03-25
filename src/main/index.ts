@@ -12,7 +12,7 @@ import Dialog from './modular/additional/dialog';
 import Menu from './modular/additional/menu';
 
 import { xpsOn } from './xps/toRenderer';
-import {  windowRegister } from './xps/toMain';
+import { windowRegister } from './xps/toMain';
 import xs from "./xps/xps_screenshots";
 import xt from "./xps/xps_tesseract";
 
@@ -33,6 +33,6 @@ Tray.create();
 
 xpsOn()
 
-await windowRegister()
+windowRegister()
 
-await App.use([Session, Dialog, Menu, xs, xt]);
+App.use([Session, Dialog, Menu, xs, xt]);

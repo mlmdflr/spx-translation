@@ -1,11 +1,11 @@
-//@ts-nocheck
 import sleep from "@/util/sleep"
+import { BrowserWindow, HandlerDetails } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
 import { pupImg } from "../modular/pup";
 import Window from '../modular/window';
-
+import windowCfg from '@/cfg/window.json'
 
 
 const setCfg = async (args: cfg) => {
@@ -31,45 +31,48 @@ const init = async (windowId: number | bigint, time?: number) => {
     await sleep(time)
   }
 
-  //加载失败处理 fail deal with
-  Window.get(windowId).webContents.once('did-fail-load', async (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
-    console.log(event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
-    logInfo(`[did-fail-load]\n`, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId)
-    if (validatedURL === "https://translate.google.com/?sl=auto&tl=zh-CN" || validatedURL === "https://translate.google.cn/?sl=auto&tl=zh-CN") {
-      Window.create({
-        id: 3,
-        title: '加载失败',
-        route: '/notify',
-        parentId: 0,
-        data: { code: errorCode, msg: errorDescription, url: validatedURL }
-      }, {
-        opacity: (await getJson()).winopacity,
-        height: 230,
-        width: 600,
-        modal: true,
-        resizable: false
-      })
-    }
-  })
+
+  let win = Window.get(windowId) as BrowserWindow;
+
+  if (win) {
+    //加载失败处理 fail deal with
+    win.webContents.once('did-fail-load', async (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+      console.log(event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
+      logInfo(`[did-fail-load]\n`, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId)
+      if (validatedURL === "https://translate.google.com/?sl=auto&tl=zh-CN" || validatedURL === "https://translate.google.cn/?sl=auto&tl=zh-CN") {
+        Window.create({
+          id: 3,
+          title: '加载失败',
+          route: '/notify',
+          parentId: 0,
+          data: { code: errorCode, msg: errorDescription, url: validatedURL }
+        }, {
+          height: 230,
+          width: 600,
+          modal: true,
+          resizable: false
+        })
+      }
+    })
 
 
-  //开始加载显示窗体
-  Window.get(windowId).webContents.once('did-start-loading', () => {
-    Window.get(windowId).webContents.executeJavaScript(`
+    //开始加载显示窗体
+    win.webContents.once('did-start-loading', () => {
+      win.webContents.executeJavaScript(`
       window.ipc.send('window-func', { type: 'show' });
       window.ipc.send('menu-show');
     `)
-  })
+    })
 
-  //加载完成注入
-  Window.get(windowId).webContents.once('dom-ready', async () => {
-    Window.get(windowId).webContents.executeJavaScript(`
+    //加载完成注入
+    win.webContents.once('dom-ready', async () => {
+      win.webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
           ${await readFile(Global.getResourcesPath("extern", '.gg1js'))}
         `).catch(() => { })
-    let json = await getJson()
-    // 首次注入css
-    Window.get(windowId).webContents.insertCSS(`
+      let json = await getJson()
+      // 首次注入css
+      win.webContents.insertCSS(`
               ${await readFile(Global.getResourcesPath("extern", '.gg1css'))}
               .T4LgNb{
                 opacity: ${json.ggopacity};
@@ -87,10 +90,10 @@ const init = async (windowId: number | bigint, time?: number) => {
                 opacity:  ${json.ggopacity};
               }
         `).catch(() => { });
-        // 
+      // 
 
-    //注入魔改原有后的样式 记录,伪类无法直接注入
-    Window.get(windowId).webContents.executeJavaScript(`
+      //注入魔改原有后的样式 记录,伪类无法直接注入
+      win.webContents.executeJavaScript(`
           document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
           let sid =  setInterval(()=>{
             if (document.styleSheets[7]) {
@@ -102,27 +105,39 @@ const init = async (windowId: number | bigint, time?: number) => {
             }
           },200)
           `).catch(() => { })
-    pupImg((await getJson()).wifekeyword).then(res => {
-      Window.get(windowId).webContents.insertCSS(` 
+      pupImg((await getJson()).wifekeyword).then(res => {
+        win.webContents.insertCSS(` 
                 #yDmH0d{
                   background-size:100% 100%;
                   background-position: center;
                   background-image: url('${res}');
                 } 
             `).catch(() => { })
+      })
     })
-  })
 
-  //关闭创建新窗体
-  Window.get(windowId).webContents.setWindowOpenHandler((): { action: "deny" } => {
-    return { action: "deny" }
-  })
+    //关闭创建新窗体
+    win.webContents.setWindowOpenHandler((details: HandlerDetails): { action: "deny" } => {
+      if (JSON.stringify(['https://translate.google.com/translate?sl',
+        'tl',
+        'hl',
+        'u',
+        'client']) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()))) {
+        Window.create({
+          url: details.url
+        }, {...windowCfg.opt,backgroundColor:'#fff'})
+      }
+      return { action: "deny" }
+    })
 
-  //禁止一些页面内跳转
-  Window.get(windowId).webContents.on('will-navigate', (event, url) => {
-    event.preventDefault()
-  })
+    //禁止一些页面内跳转
+    win.webContents.on('will-navigate', (event, url) => {
+      console.log(url);
+      event.preventDefault()
+    })
+  }
+
+
 }
 
 export { setCfg, getJson, init }
-export type { cfg }

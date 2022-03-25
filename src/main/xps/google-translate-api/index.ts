@@ -29,6 +29,13 @@ interface ITranslateResponse {
 
 
 
+declare global {
+    interface Error {
+        code: number;
+    }
+}
+
+
 function extract(key: string, res: { body: string; }) {
     var re = new RegExp(`"${key}":".*?"`);
     var result = re.exec(res.body);
@@ -42,10 +49,9 @@ function extract(key: string, res: { body: string; }) {
 export default async function translate(text: any, opts: googleTranslateApi): Promise<ITranslateResponse> {
     let gotopts = {};
     var e: Error | undefined = undefined;
-    [opts.from, opts.to].forEach(function (lang) {
+    [opts.from, opts.to].forEach((lang) => {
         if (lang && !isSupported(lang)) {
             e = new Error();
-            //@ts-ignore
             e.code = 400;
             e.message = 'The language \'' + lang + '\' is not supported';
         }
@@ -78,7 +84,7 @@ export default async function translate(text: any, opts: googleTranslateApi): Pr
         };
 
         return data;
-    }).then(function (data: any) {
+    }).then(async (data: any) => {
         url = url + '/_/TranslateWebserverUi/data/batchexecute?' + new URLSearchParams((data)).toString();
         gotopts = {
             data: 'f.req=' + encodeURIComponent(JSON.stringify([[['MkEWBc', JSON.stringify([[text, opts.from, opts.to, true], [null]]), null, 'generic']]])) + '&',
@@ -86,7 +92,7 @@ export default async function translate(text: any, opts: googleTranslateApi): Pr
                 'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
             }, method: 'post'
         }
-        return req<string>(url, gotopts).then(function (res) {
+        return req<string>(url, gotopts).then((res) => {
             var json = res.slice(6);
             var length = '';
 
@@ -108,12 +114,9 @@ export default async function translate(text: any, opts: googleTranslateApi): Pr
             };
 
             try {
-                //@ts-ignore
-                length = /^\d+/.exec(json)[0];
-                //@ts-ignore
+                length = (/^\d+/.exec(json) as RegExpExecArray)[0];
                 json = JSON.parse(json.slice(length.length, parseInt(length, 10) + length.length));
                 json = JSON.parse(json[0][2]);
-                //@ts-ignore
                 result.raw = json;
             } catch (e) {
                 return result;
@@ -156,7 +159,7 @@ export default async function translate(text: any, opts: googleTranslateApi): Pr
                 }
             }
             return result;
-        }).catch(function (err: { message: string; statusCode: number | undefined; code: string; }) {
+        }).catch((err: { message: string; statusCode: number | undefined; code: string; }) => {
             err.message += `\nUrl: ${url}`;
             if (err.statusCode !== undefined && err.statusCode !== 200) {
                 err.code = 'BAD_REQUEST';
