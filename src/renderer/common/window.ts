@@ -4,7 +4,7 @@ import customize from '@/renderer/store/customize';
 /**
  * 窗口初始化 (i)
  * */
-export function windowLoad(listener: (event: IpcRendererEvent, args: Customize) => void) {
+export function windowLoad(listener: (event: IpcRendererEvent, args: Customize_Route) => void) {
   window.ipc.once(`window-load`, listener);
 }
 
