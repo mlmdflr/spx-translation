@@ -1,5 +1,5 @@
 import sleep from "@/util/sleep"
-import { BrowserWindow, HandlerDetails } from "electron";
+import { BrowserWindow, HandlerDetails, shell } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
@@ -27,9 +27,7 @@ const getJson = async () => {
  * @param time 延迟时间
  */
 const init = async (windowId: number | bigint, time?: number) => {
-  if (time !== undefined) {
-    await sleep(time)
-  }
+  if (time !== undefined) await sleep(time)
 
 
   let win = Window.get(windowId) as BrowserWindow;
@@ -66,11 +64,12 @@ const init = async (windowId: number | bigint, time?: number) => {
 
     //加载完成注入
     win.webContents.once('dom-ready', async () => {
+      let json = await getJson()
       win.webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
-          ${await readFile(Global.getResourcesPath("extern", '.gg1js'))}
+          ${json.default === 1 ? await readFile(Global.getResourcesPath("extern", '.cnggjs')) : ''} 
+          ${json.default === 2 ? await readFile(Global.getResourcesPath("extern", '.gg1js')) : ''} 
         `).catch(() => { })
-      let json = await getJson()
       // 首次注入css
       win.webContents.insertCSS(`
               ${await readFile(Global.getResourcesPath("extern", '.gg1css'))}
@@ -123,16 +122,18 @@ const init = async (windowId: number | bigint, time?: number) => {
         'hl',
         'u',
         'client']) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()))) {
-        Window.create({
-          url: details.url
-        }, {...windowCfg.opt,backgroundColor:'#fff'})
+          getJson().then(json => {
+            if (json.webOpenmMode === 'electron')  Window.create({
+              url: details.url
+            }, windowCfg.opt)
+            else shell.openExternal(details.url);
+          })
       }
       return { action: "deny" }
     })
 
     //禁止一些页面内跳转
     win.webContents.on('will-navigate', (event, url) => {
-      console.log(url);
       event.preventDefault()
     })
   }

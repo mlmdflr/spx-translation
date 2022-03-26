@@ -137,11 +137,11 @@ export class App {
     });
     //app常用获取路径
     ipcMain.handle('app-path-get', (event, args) => {
-      return app.getPath(args.key);
+      return app.getPath(args);
     });
     //app打开外部url
     ipcMain.handle('app-open-url', (event, args) => {
-      return shell.openExternal(args.url);
+      return shell.openExternal(args);
     });
     //app重启
     ipcMain.on('app-relaunch', (event, args) => {
