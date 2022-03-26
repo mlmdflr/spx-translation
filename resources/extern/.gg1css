@@ -18,6 +18,12 @@
 .Oim1sf{
   -webkit-app-region: drag;
 }
+
+/*cn 的遗留 */
+.hgbeOc{
+  -webkit-app-region: drag;
+}
+
 .U0xwnf{
   -webkit-app-region: no-drag;
 }

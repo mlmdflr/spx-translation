@@ -85,10 +85,13 @@ type WindowStatusOpt =
   | 'isFocused'
   | 'isModal';
 
+type OpenmMode = 'electron' | 'browser'
+
 type cfg = {
   wifekeyword: string,
   ggopacity: number,
   default: number,
+  webOpenmMode: OpenmMode,
   hotKey: {
     showHied: string
     screenshotTranslate: string
