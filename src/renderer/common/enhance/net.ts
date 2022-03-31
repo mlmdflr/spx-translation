@@ -1,19 +1,8 @@
 import { queryParams } from "@/util";
 
-export interface NetOpt extends RequestInit {
-  isStringify?: boolean; //是否stringify参数（非GET请求使用）
-  isHeaders?: boolean; //是否获取headers
-  data?: any;
-  body?: any;
-  timeout?: number;
-  type?: 'TEXT' | 'JSON' | 'BUFFER' | 'BLOB'; //返回数据类型
-}
+import { Headers } from "node-fetch";
 
 
-export interface TimeOutAbort {
-  signal: AbortSignal;
-  id: NodeJS.Timeout;
-}
 
 /**
  * 创建 AbortController
@@ -50,28 +39,28 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
         case 'TEXT':
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
+              headers: res.headers,
               data: await res.text()
             }
             : await res.text();
         case 'JSON':
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
+              headers: res.headers,
               data: await res.json()
             }
             : await res.json();
         case 'BUFFER':
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
+              headers: res.headers,
               data: await res.arrayBuffer()
             }
             : await res.arrayBuffer();
         case 'BLOB':
           return sendData.isHeaders
             ? {
-              headers: await res.headers,
+              headers: res.headers,
               data: await res.blob()
             }
             : await res.blob();

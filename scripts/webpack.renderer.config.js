@@ -21,7 +21,9 @@ module.exports = (env) => {
       chunkFilename: './js/[id].v.js',
       path: resolve('dist')
     },
-    resolve: base.resolve,
+    resolve: {
+      ...base.resolve,
+    },
     module: {
       rules: [
         ...base.module.rules,

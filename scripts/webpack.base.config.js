@@ -21,7 +21,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(mjs)$/,
+        test: /\.(mjs|map)$/,
         resolve: {
           fullySpecified: false
         },

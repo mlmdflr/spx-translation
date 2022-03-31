@@ -1,1 +1,20 @@
-{"wifekeyword":"中二病","ggopacity":0.8,"winopacity":1,"default":2,"webOpenmMode":"browser","hotKey":{"showHied":"CommandOrControl+E","screenshotTranslate":"CommandOrControl+Shift+E","fastTranslate":"CommandOrControl+Shift+W"},"orc":{"lang":["eng"],"worker":1,"open":true}}
+{
+    "wifekeyword": "中二病",
+    "ggopacity": 0.8,
+    "winopacity": 1,
+    "default": 2,
+    "htmlLang": "en",
+    "webOpenmMode": "browser",
+    "hotKey": {
+        "showHied": "CommandOrControl+E",
+        "screenshotTranslate": "CommandOrControl+Shift+E",
+        "fastTranslate": "CommandOrControl+Shift+W"
+    },
+    "orc": {
+        "lang": [
+            "eng"
+        ],
+        "worker": 1,
+        "open": true
+    }
+}

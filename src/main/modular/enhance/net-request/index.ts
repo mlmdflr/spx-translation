@@ -75,7 +75,6 @@ function requestInit(
 /**
  * 上传
  * @param url
- * @param sendData
  * @param params
  */
 export function upload(url: string, params: RequestUploadOpt) {
@@ -143,7 +142,6 @@ export function upload(url: string, params: RequestUploadOpt) {
 /**
  * 下载
  * @param url
- * @param sendData
  * @param params
  */
 export function download(url: string, params: RequestDownloadOpt = {}) {

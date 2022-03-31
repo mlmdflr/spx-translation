@@ -92,14 +92,20 @@ type cfg = {
   ggopacity: number,
   default: number,
   webOpenmMode: OpenmMode,
+  htmlLang: GoogleTranslate.desiredLang,
   hotKey: {
     showHied: string
     screenshotTranslate: string
     fastTranslate: string
   },
+  proxy: EasyAgent,
   orc: {
     lang: [],
     worker: number,
     open: boolean
   }
+}
+
+interface AnyObject {
+  [key: string]: any
 }
