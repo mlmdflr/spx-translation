@@ -18,7 +18,6 @@
 
 
 <script setup lang='ts' >
-import { getGlobal } from '@/renderer/common/app';
 import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
 import customize from '@/renderer/store/customize';
 
@@ -41,7 +40,7 @@ const props = defineProps({
   }
 });
 
-const isMacintosh = await getGlobal<string>('system.platform') === 'darwin';
+const isMacintosh = window.environment.platform === 'darwin';
 
 
 let title = customize.get().title

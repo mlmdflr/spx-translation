@@ -107,17 +107,12 @@ export const langs = {
     'zu': 'Zulu'
 };
 
-export function getCode(desiredLang: keyof typeof langs) {
-    if (langs[desiredLang]) {
-        return desiredLang;
-    }
-    var keys = Object.keys(langs).filter(function (key) {
-        return langs[key as keyof typeof langs].toLowerCase() === desiredLang.toLowerCase();
-    });
-    return keys[0];
-}
 
 
-export function isSupported(desiredLang: any) {
-    return Boolean(getCode(desiredLang));
+export const getCode = (desiredLang: GoogleTranslate.desiredLang): GoogleTranslate.desiredLang => {
+    if (langs[desiredLang]) return desiredLang;
+    let keys = Object.keys(langs).filter((key) => langs[key as GoogleTranslate.desiredLang].toLowerCase() === desiredLang.toLowerCase());
+    return keys[0] as GoogleTranslate.desiredLang;
 }
+
+export const isSupported = (desiredLang: GoogleTranslate.desiredLang) => Boolean(getCode(desiredLang));
