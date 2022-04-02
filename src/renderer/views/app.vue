@@ -18,4 +18,6 @@ import { keepAliveData } from "@/renderer/store";
 <style lang="scss">
 @import "./scss/color";
 @import "./scss/index";
+
+:root{ --background_color:red }
 </style>

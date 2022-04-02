@@ -3,12 +3,17 @@
     "ggopacity": 0.8,
     "winopacity": 1,
     "default": 2,
-    "htmlLang": "en",
+    "htmlLang": "zh-CN",
     "webOpenmMode": "browser",
+    "proxy": {
+        "ip_dn": "127.0.0.1",
+        "port": 10808,
+        "type": "SOCKS",
+        "open": false
+    },
     "hotKey": {
         "showHied": "CommandOrControl+E",
-        "screenshotTranslate": "CommandOrControl+Shift+E",
-        "fastTranslate": "CommandOrControl+Shift+W"
+        "screenshotTranslate": "CommandOrControl+Shift+E"
     },
     "orc": {
         "lang": [

@@ -15,9 +15,7 @@ function extract(key: string, res: { body: string; }) {
 }
 
 
-
-
-export default async function translate(text: any, opts: GoogleTranslateApi, param?: NetOpt, netagent?: EasyAgent): Promise<ITranslateResponse> {
+export default async function translate(text: any, opts: GoogleTranslateApi, param?: NetReq.NetOpt, netagent?: NetReq.EasyAgent): Promise<ITranslateResponse> {
     let gotopts = {};
     var e: Error | undefined = undefined;
     [opts.from, opts.to].forEach((lang) => {

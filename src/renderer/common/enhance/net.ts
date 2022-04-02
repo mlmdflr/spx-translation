@@ -15,7 +15,7 @@ export function AbortSignal() {
  * 超时处理
  * @param outTime
  */
-function timeOutAbort(outTime: number): TimeOutAbort {
+function timeOutAbort(outTime: number): NetReq.TimeOutAbort {
   const controller = AbortSignal();
   const timeoutId = setTimeout(() => {
     controller.abort();
@@ -28,7 +28,7 @@ function timeOutAbort(outTime: number): TimeOutAbort {
  * @param url
  * @param sendData
  */
-function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
+function fetchPromise<T>(url: string, sendData: NetReq.NetOpt): Promise<T> {
   return fetch(url, sendData)
     .then((res) => {
       if (res.status >= 200 && res.status < 300) return res;
@@ -74,12 +74,12 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export async function net<T>(url: string, param: NetOpt = {}): Promise<T> {
+export async function net<T>(url: string, param: NetReq.NetOpt = {}): Promise<T> {
   if (!url.startsWith('http://') && !url.startsWith('https://'))
     url = 'https://' + url
-  let abort: TimeOutAbort | null = null;
+  let abort: NetReq.TimeOutAbort | null = null;
   if (!param.signal) abort = timeOutAbort(param.timeout || 3000);
-  let sendData: NetOpt = {
+  let sendData: NetReq.NetOpt = {
     isHeaders: param.isHeaders,
     isStringify: param.isStringify,
     headers: new Headers(

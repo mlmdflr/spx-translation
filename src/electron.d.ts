@@ -87,6 +87,13 @@ type WindowStatusOpt =
 
 type OpenmMode = 'electron' | 'browser'
 
+
+declare namespace NetReq {
+  interface EasyAgent {
+    open: boolean
+  }
+}
+
 type cfg = {
   wifekeyword: string,
   ggopacity: number,
@@ -98,7 +105,7 @@ type cfg = {
     screenshotTranslate: string
     fastTranslate: string
   },
-  proxy: EasyAgent,
+  proxy: NetReq.EasyAgent,
   orc: {
     lang: [],
     worker: number,

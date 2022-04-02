@@ -18,7 +18,7 @@ export function AbortSignal() {
  * 超时处理
  * @param outTime
  */
-function timeOutAbort(outTime: number): TimeOutAbort {
+function timeOutAbort(outTime: number): NetReq.TimeOutAbort {
     const controller = AbortSignal();
     const timeoutId = setTimeout(() => {
         controller.abort();
@@ -29,27 +29,27 @@ function timeOutAbort(outTime: number): TimeOutAbort {
 export function queryParams(data: any): string {
     let _result = [];
     for (let key in data) {
-      let value = data[key];
-      if (['', undefined, null].includes(value)) {
-        continue;
-      }
-      if (value.constructor === Array) {
-        value.forEach((_value) => {
-          _result.push(encodeURIComponent(key) + '[]=' + encodeURIComponent(_value));
-        });
-      } else {
-        _result.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
-      }
+        let value = data[key];
+        if (['', undefined, null].includes(value)) {
+            continue;
+        }
+        if (value.constructor === Array) {
+            value.forEach((_value) => {
+                _result.push(encodeURIComponent(key) + '[]=' + encodeURIComponent(_value));
+            });
+        } else {
+            _result.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+        }
     }
     return _result.length ? _result.join('&') : '';
-  }
+}
 
 /**
  * 请求处理
  * @param url
  * @param sendData
  */
-function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
+function fetchPromise<T>(url: string, sendData: NetReq.NetOpt): Promise<T> {
     return fetch(url, sendData)
         .then((res) => {
             if (res.status >= 200 && res.status < 300) return res;
@@ -88,7 +88,7 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
             }
         })
         .catch((err) => {
-           return Promise.reject({ code: 400, msg: err.message })
+            return Promise.reject({ code: 400, msg: err.message })
         }) as Promise<T>;
 }
 
@@ -99,11 +99,11 @@ function fetchPromise<T>(url: string, sendData: NetOpt): Promise<T> {
  * @param url
  * @param param
  */
-export async function net<T>(url: string, param: NetOpt = {}, agent?: any): Promise<T> {
+export async function net<T>(url: string, param: NetReq.NetOpt = {}, agent?: any): Promise<T> {
     if (url.indexOf('http://') === -1 && url.indexOf('https://') === -1) url = 'https:' + url;
-    let abort: TimeOutAbort | null = null;
+    let abort: NetReq.TimeOutAbort | null = null;
     if (!param.signal) abort = timeOutAbort(param.timeout || 3000);
-    let sendData: NetOpt = {
+    let sendData: NetReq.NetOpt = {
         isHeaders: param.isHeaders,
         isStringify: param.isStringify,
         headers: new Headers(
@@ -137,12 +137,7 @@ export async function net<T>(url: string, param: NetOpt = {}, agent?: any): Prom
     });
 }
 
-export function agent_net<T>(url: string, param?: NetOpt, agent?: EasyAgent): Promise<T> {
+export function agent_net<T>(url: string, param?: NetReq.NetOpt, agent?: NetReq.EasyAgent): Promise<T> {
     if (!agent) return net(url, param, agent)
-    switch (agent.type) {
-        case 'HTTP':
-            return net<T>(url, param, new HttpsProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
-        case 'SOCKS':
-            return net<T>(url, param, new SocksProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
-    }
+    return net<T>(url, param, new SocksProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
 }

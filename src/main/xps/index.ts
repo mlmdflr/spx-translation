@@ -26,13 +26,19 @@ const getJson = async () => {
  * @param windowId 窗口id
  * @param time 延迟时间
  */
-const init = async (windowId: number | bigint, time?: number) => {
+const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?: number) => {
   if (time !== undefined) await sleep(time)
-
 
   let win = Window.get(windowId) as BrowserWindow;
 
   if (win) {
+    const json = await getJson()
+
+    //html load proxy
+    json.proxy.open && win.webContents.session.setProxy({
+      proxyRules: `${json.proxy.type}://${json.proxy.ip_dn}:${json.proxy.port}`
+    })
+
     //加载失败处理 fail deal with
     win.webContents.once('did-fail-load', async (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
       console.log(event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId);
@@ -64,11 +70,11 @@ const init = async (windowId: number | bigint, time?: number) => {
 
     //加载完成注入
     win.webContents.once('dom-ready', async () => {
-      let json = await getJson()
+
       win.webContents.executeJavaScript(`
           window.ipc.send('window-func', { type: 'show' });
-          ${json.default === 1 ? await readFile(Global.getResourcesPath("extern", '.cnggjs')) : ''} 
-          ${json.default === 2 ? await readFile(Global.getResourcesPath("extern", '.gg1js')) : ''} 
+          ${df === 'cn' ? await readFile(Global.getResourcesPath("extern", '.cnggjs')) : ''} 
+          ${df === 'com' ? await readFile(Global.getResourcesPath("extern", '.gg1js')) : ''} 
         `).catch(() => { })
       // 首次注入css
       win.webContents.insertCSS(`
@@ -91,15 +97,15 @@ const init = async (windowId: number | bigint, time?: number) => {
         `).catch(() => { });
       // 
 
-      //注入魔改原有后的样式 记录,伪类无法直接注入
+      //
       win.webContents.executeJavaScript(`
           document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
           let sid =  setInterval(()=>{
-            if (document.styleSheets[7]) {
-              document.styleSheets[7].deleteRule(78)
-              document.styleSheets[7].deleteRule(79)
-              document.styleSheets[7].deleteRule(79)
-              document.styleSheets[7].insertRule('.ita-hwt-ime-st { position: fixed; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; border: 1px solid rgb(204, 204, 204); transition: opacity 0.1s linear 0s; z-index: 2147483640; }',0)
+            if (document.styleSheets[6]) {
+              document.styleSheets[6].deleteRule(78)
+              document.styleSheets[6].deleteRule(79)
+              document.styleSheets[6].deleteRule(79)
+              document.styleSheets[6].insertRule('.ita-hwt-ime-st { position: fixed; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; border: 1px solid rgb(204, 204, 204); transition: opacity 0.1s linear 0s; z-index: 2147483640; }',0)
               clearInterval(sid)
             }
           },200)
@@ -112,7 +118,7 @@ const init = async (windowId: number | bigint, time?: number) => {
                   background-image: url('${res}');
                 } 
             `).catch(() => { })
-      })
+      }).catch(()=>{})
     })
 
     //关闭创建新窗体
@@ -122,12 +128,12 @@ const init = async (windowId: number | bigint, time?: number) => {
         'hl',
         'u',
         'client']) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()))) {
-          getJson().then(json => {
-            if (json.webOpenmMode === 'electron')  Window.create({
-              url: details.url
-            }, windowCfg.opt)
-            else shell.openExternal(details.url);
-          })
+        getJson().then(json => {
+          if (json.webOpenmMode === 'electron') Window.create({
+            url: details.url
+          }, windowCfg.opt)
+          else shell.openExternal(details.url);
+        })
       }
       return { action: "deny" }
     })

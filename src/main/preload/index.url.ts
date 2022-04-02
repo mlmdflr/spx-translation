@@ -4,7 +4,7 @@ import { EOL } from 'os';
 import { isSecondInstanceWin } from '@/cfg/app.json'
 import sleep from '@/util/sleep'
 import { Snowflake } from '@/util/snowflake'
-import { net, NetOpt } from '@/renderer/common/enhance/net'
+import { net } from '@/renderer/common/enhance/net'
 
 contextBridge.exposeInMainWorld('ipc', {
     send: (channel: string, args?: any) => ipcRenderer.send(channel, args),
@@ -29,4 +29,4 @@ contextBridge.exposeInMainWorld('sleep', (duration: number, value: any) => sleep
 
 contextBridge.exposeInMainWorld('Snowflake', (workerId: bigint, dataCenterId: bigint) => new Snowflake(workerId, dataCenterId).nextId());
 
-contextBridge.exposeInMainWorld('net', (url: string, param: NetOpt) => net(url, param));
+contextBridge.exposeInMainWorld('net', (url: string, param: NetReq.NetOpt) => net(url, param));

@@ -4,15 +4,13 @@ import { getSearchCount, pupImg } from "../modular/pup"
 import Window from '../modular/window';
 import { getJson, setCfg, init } from ".";
 import Shortcut from "../modular/enhance/shortcut";
+import translate from "./google-translate-api";
+import { isNull } from "@/util";
 
 
 
 export const xpsOn = () => {
 
-  /**
-    * 向渲染进程提供翻译的加载初始化
-    */
-  ipcMain.handle('init', (e, a) => init(a))
 
 
   /**
@@ -81,7 +79,6 @@ export const xpsOn = () => {
     else (Window.get(0) as BrowserWindow).setFullScreen(true)
   })
 
-
   /**
    * 向渲染进程提供解除
    */
@@ -117,4 +114,10 @@ export const xpsOn = () => {
     );
   })
 
+
+  //翻译
+  ipcMain.handle('translate-text', async (_, args) => {
+    const cfg = await getJson()
+    return translate(args.o, { from: args.lang_o, to: args.lang_g, tld: isNull(cfg.default) ? 'cn' : (cfg.default === 2 ? 'com' : 'cn') }, { timeout: 3000 }, cfg.proxy.open ? cfg.proxy : undefined)
+  })
 }
