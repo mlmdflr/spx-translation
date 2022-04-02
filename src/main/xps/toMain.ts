@@ -13,7 +13,7 @@ export async function globalization(lang: GoogleTranslate.desiredLang, tld: Goog
             frame: false,
         }
     );
-    await init(0)
+    await init(0,tld)
 }
 
 

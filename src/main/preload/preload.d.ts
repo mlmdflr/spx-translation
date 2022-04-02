@@ -17,7 +17,6 @@ interface Environment {
   isSecondInstanceWin: boolean;
 }
 
-
 declare global {
   interface Window {
     ipc: Ipc;

@@ -2,7 +2,7 @@
   <div class="container">
     <Head :eventShow="false" />
     <div class="message-info">
-      <ElDescriptions size="mini" border :column="1" title="详细信息">
+      <ElDescriptions size="small" :border="true" :column="1" title="详细信息">
         <ElDescriptionsItem label="msg">{{ data.msg }}</ElDescriptionsItem>
         <ElDescriptionsItem label="code">
           <ElCheckTag
@@ -17,10 +17,10 @@
       <div style="height: 10px;"></div>
       <ElRow :gutter="20">
         <ElCol :span="3" :offset="18">
-          <ElButton size="mini" type="info" plain @click="restart">重启</ElButton>
+          <ElButton size="small" type="info" plain @click="restart">重启</ElButton>
         </ElCol>
         <ElCol :span="3">
-          <ElButton size="mini" type="info" plain @click="quit">退出</ElButton>
+          <ElButton size="small" type="info" plain @click="quit">退出</ElButton>
         </ElCol>
       </ElRow>
     </div>
@@ -46,7 +46,7 @@ import {
 } from 'element-plus';
 import { openUrl, relaunch } from '@/renderer/common/app';
 
-import { getCfg, setCfg,relaunchShortcutRegister } from "@/renderer/common/xps";
+import { getCfg, setCfg, relaunchShortcutRegister } from "@/renderer/common/xps";
 
 
 const data: { code: number, msg: string, url: string } = customize.get().data;
@@ -60,14 +60,14 @@ const quit = () => {
 }
 
 const restart = () => {
-  getCfg().then(res=>{
-    if (res.default === 1 ) {
-        res.default = 2
-    }else if (res.default === 2 ) {
-        res.default = 1
+  getCfg().then(res => {
+    if (res.default === 1) {
+      res.default = 2
+    } else if (res.default === 2) {
+      res.default = 1
     }
-    setCfg(res).then(res=>{
-      relaunchShortcutRegister().then(res=>{
+    setCfg(res).then(res => {
+      relaunchShortcutRegister().then(res => {
         relaunch(true)
       })
     })

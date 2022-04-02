@@ -27,8 +27,18 @@
         <ElRadio :label="2">.com</ElRadio>
         <ElRadio :label="0">不设置</ElRadio>
       </ElRadioGroup>
-      <ElButton class="close" @click="close">确定</ElButton>
-     
+      <ElSelect style="float: right;" v-model="lang" @change="langChange" size="small">
+        <ElOption
+          v-for="item in Object.keys(objLangs)"
+          :key="item"
+          :label="objLangs[item]"
+          :value="item"
+        />
+      </ElSelect>
+      <div class="close">
+        <ElButton v-if="restShow" type="info" plain @click="restart">立即重启</ElButton>
+        <ElButton @click="close">确定</ElButton>
+      </div>
     </div>
   </div>
 </template>
@@ -53,14 +63,27 @@ import {
   ElRadioGroup,
   ElNotification,
   ElMessage,
+  ElSelect,
+  ElOption
 } from 'element-plus';
 
 import { ElSlider } from "element-plus";
+
+import { langs } from "@/main/xps/google-translate-api/languages";
+
+import { relaunch } from "@/renderer/common/app";
+
+const objLangs: {
+  [key: string]: string
+} = langs
 
 const argsData = customize.get();
 
 let cacheSize = ref('')
 
+let restShow = ref(false)
+
+let lang = ref(argsData.data.htmlLang)
 
 let getCache = () => window.ipc.invoke('get:cache').then(res => cacheSize.value = net.bytesToSize(res).bytes + net.bytesToSize(res).unit)
 
@@ -75,12 +98,27 @@ let delCache = () => window.ipc.invoke('clear:cache').then(res => getCache()).th
   type: 'success',
 }))
 
+
+function restart() {
+  argsData.data.wifekeyword = wifekeyword.value
+  argsData.data.ggopacity = ggopacity.value;
+  argsData.data.default = _default.value
+  argsData.data.htmlLang = lang.value
+  window.ipc.invoke('updateCfg', argsData.data).then(() => relaunch(true))
+}
+
 function close() {
   windowClose();
   argsData.data.wifekeyword = wifekeyword.value
   argsData.data.ggopacity = ggopacity.value;
   argsData.data.default = _default.value
+  argsData.data.htmlLang = lang.value
   window.ipc.invoke('updateCfg', argsData.data);
+}
+
+function langChange(val: string) {
+  lang.value = val
+  restShow.value = true
 }
 
 function testWifekeyword() {

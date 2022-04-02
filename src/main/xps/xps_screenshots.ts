@@ -22,7 +22,7 @@ export default class screenshots {
                     screenshots.startCapture()
                 }
             })
-            
+
             screenshots.on('ok', async (e, ib, b) => {
                 if (!cfg.orc.open) return;
                 const sid = new Snowflake(0n, 0n).nextId()
@@ -36,7 +36,9 @@ export default class screenshots {
                     height: 500,
                     width: 400,
                     maxHeight: 500,
-                    maxWidth: 400
+                    minHeight: 500,
+                    maxWidth: 400,
+                    minWidth: 400
                 })
                 try {
                     const { data: { text } } = await new tesseract().orc(ib)
@@ -47,9 +49,9 @@ export default class screenshots {
                         from: 'auto',
                         to: 'zh-CN',
                         tld: isNull(cfg.default) ? 'cn' : (cfg.default === 2 ? 'com' : 'cn')
-                    }).then(res => {
-                        Window.get(sid)?.webContents.send(`window-message-translate:ok:${sid}-back`, res.text)
-                    }).catch(err => { throw err })
+                    }, { timeout: 3000 }, cfg.proxy.open ? cfg.proxy : undefined).then(res => {
+                        Window.get(sid)?.webContents.send(`window-message-translate:ok:${sid}-back`, { o: text, g: res.text })
+                    })
                 } catch (error) {
                     console.log(error);
                     setTimeout(() => {
