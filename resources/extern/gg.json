@@ -2,13 +2,13 @@
     "wifekeyword": "中二病",
     "ggopacity": 0.8,
     "winopacity": 1,
-    "default": 2,
-    "htmlLang": "zh-CN",
+    "default": 1,
+    "htmlLang": "en",
     "webOpenmMode": "browser",
     "proxy": {
         "ip_dn": "127.0.0.1",
         "port": 10808,
-        "type": "SOCKS",
+        "type": "SOCKS5",
         "open": false
     },
     "hotKey": {
