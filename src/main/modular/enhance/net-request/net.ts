@@ -139,5 +139,11 @@ export async function net<T>(url: string, param: NetReq.NetOpt = {}, agent?: any
 
 export function agent_net<T>(url: string, param?: NetReq.NetOpt, agent?: NetReq.EasyAgent): Promise<T> {
     if (!agent) return net(url, param, agent)
-    return net<T>(url, param, new SocksProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
+    switch (agent.type) {
+        case 'HTTP':
+            return net<T>(url, param, new HttpsProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
+        case 'SOCKS4':
+        case 'SOCKS5':
+            return net<T>(url, param, new SocksProxyAgent(`${agent.type}://${agent.ip_dn}:${agent.port}`))
+    }
 }

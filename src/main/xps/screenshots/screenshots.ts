@@ -1,5 +1,6 @@
 import { dialog, ipcMain, clipboard, nativeImage, BrowserWindow, BrowserView, desktopCapturer, app } from 'electron'
 import type { SourcesOptions } from "electron";
+import { newRubickBase } from 'rubickbase'
 import fs from 'fs/promises'
 import Event from './event'
 import Events from 'events'
@@ -142,7 +143,9 @@ export default class Screenshots extends Events {
         devTools: !app.isPackaged,
       }
     })
+    
     this.$win.setBrowserView(this.$view)
+
     this.$view.setBounds(bound)
     this.$view.webContents.send('SCREENSHOTS:capture', display)
   }
@@ -152,7 +155,13 @@ export default class Screenshots extends Events {
    */
   private listenIpc(): void {
     ipcMain.handle('SCREENSHOTS:getSources', async (e, sourcesOptions: SourcesOptions) => {
-      return await desktopCapturer.getSources(sourcesOptions)
+      const {
+        screenCapture,
+        screenCaptureAll,
+
+      } = await newRubickBase().getBasicAPI()
+      
+      return (await screenCapture())?.toBase64()
     })
     /**
      * OK事件

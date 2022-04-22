@@ -94,8 +94,9 @@ export function browserWindowInit(
 
 /**
  * 窗口加载
+ * @deprecated
  */
-async function load(win: BrowserWindow) {
+async function _load(win: BrowserWindow) {
   // 注入初始化代码
   win.webContents.on('did-finish-load', () => {
     if ('route' in win.customize) win.webContents.send(`window-load`, win.customize)
@@ -123,6 +124,34 @@ async function load(win: BrowserWindow) {
     throw new Error(`url error`)
   }
 }
+
+/**
+ * 窗口加载
+ */
+async function load(win: BrowserWindow) {
+  // 注入初始化代码
+  win.webContents.on('did-finish-load', () => {
+    if ('route' in win.customize) win.webContents.send(`window-load`, win.customize)
+  });
+  // 窗口最大最小监听
+  win.on('maximize', () => win.webContents.send(`window-maximize-${win.customize.id}`, 'maximize'));
+  win.on('unmaximize', () => win.webContents.send(`window-maximize-${win.customize.id}`, 'unmaximize'));
+  // 聚焦失焦监听 
+  win.on('blur', () => win.webContents.send(`window-blur-focus-${win.customize.id}`, 'blur'));
+  win.on('focus', () => win.webContents.send(`window-blur-focus-${win.customize.id}`, 'focus'));
+
+  //页面加载
+  if ('route' in win.customize && win.customize.baseUrl) {
+    if (win.customize.baseUrl.startsWith('https://') || win.customize.baseUrl.startsWith('http://'))
+      return win.loadURL(win.customize.baseUrl, win.customize.loadOptions as LoadURLOptions);
+    return win.loadFile(win.customize.baseUrl, win.customize.loadOptions as LoadFileOptions);
+  } else if ('url' in win.customize && win.customize.url) {
+    if (win.customize.url.startsWith('https://') || win.customize.url.startsWith('http://'))
+      return win.loadURL(win.customize.url, win.customize.loadOptions as LoadURLOptions);
+    return win.loadFile(win.customize.url, win.customize.loadOptions as LoadFileOptions);
+  } else throw new Error(`load url error`)
+}
+
 
 export class Window {
   private static instance: Window;
@@ -214,7 +243,7 @@ export class Window {
           const appPort = readFileSync(join('.port'), 'utf8');
           win.webContents.openDevTools({ mode: 'detach' });
           if ('route' in win.customize) win.customize.baseUrl = `http://localhost:${appPort}`;
-          load(win);
+          load(win)
         });
       } catch (e) {
         throw 'not found .port';
@@ -222,7 +251,7 @@ export class Window {
       return;
     }
     if ('route' in win.customize) win.customize.baseUrl = join(__dirname, '../index.html');
-    load(win);
+    load(win)
   }
 
   /**
