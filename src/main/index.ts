@@ -17,6 +17,7 @@ import xs from "./xps/xps_screenshots";
 import xt from "./xps/xps_tesseract";
 
 await App.start();
+
 // 主要模块
 Global.on();//全局模块
 Window.on();//窗口模块

@@ -1,6 +1,3 @@
-import type { cfg } from "@/main/xps";
-
-
 export async function getCfg() {
     return window.ipc.invoke('getCfg')
 }

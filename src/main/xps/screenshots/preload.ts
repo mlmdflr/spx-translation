@@ -20,32 +20,15 @@ contextBridge.exposeInMainWorld('screenshots', {
   },
   capture: async (display: Display) => {
 
-    const sources = await ipcRenderer.invoke('SCREENSHOTS:getSources', {
-      types: ['screen'],
-      thumbnailSize: {
-        width: display.width,
-        height: display.height
-      }
-    })
+    const sources = await ipcRenderer.invoke('SCREENSHOTS:getSources')
 
-    let source
-    // Linux系统上，screen.getDisplayNearestPoint 返回的 Display 对象的 id 和 这儿 source 对象上的 display_id(Linux上，这个值是空字符串) 或 id 的中间部分，都不一致
-    // 但是，如果只有一个显示器的话，其实不用判断，直接返回就行
-    if (sources.length === 1) {
-      source = sources[0]
-    } else {
-      source = sources.find((source: { display_id: string; id: string }) => {
-        return source.display_id === display.id.toString() || source.id.startsWith(`screen:${display.id}:`)
-      })
-    }
-
-    if (!source) {
+    if (!sources) {
       console.error(sources)
       console.error(display)
       throw new Error('没有获取到截图数据')
     }
-
-    return source.thumbnail.toDataURL()
+    
+    return sources
   },
   captured: () => {
     console.log('contextBridge captured')
@@ -54,12 +37,10 @@ contextBridge.exposeInMainWorld('screenshots', {
   },
   save: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => {
     console.log('contextBridge save', arrayBuffer, data)
-
     ipcRenderer.send('SCREENSHOTS:save', Buffer.from(arrayBuffer), data)
   },
   cancel: () => {
     console.log('contextBridge cancel')
-
     ipcRenderer.send('SCREENSHOTS:cancel')
   },
   ok: (arrayBuffer: ArrayBuffer, data: ScreenshotsData) => {

@@ -90,7 +90,7 @@ type OpenmMode = 'electron' | 'browser'
 
 declare namespace NetReq {
   interface EasyAgent {
-    open: boolean
+    open?: boolean
   }
 }
 
