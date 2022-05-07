@@ -158,9 +158,7 @@ export default class Screenshots extends Events {
       const {
         screenCapture,
         screenCaptureAll,
-
       } = await newRubickBase().getBasicAPI()
-      
       return (await screenCapture())?.toBase64()
     })
     /**

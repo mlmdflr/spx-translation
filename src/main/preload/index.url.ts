@@ -2,8 +2,7 @@ import type { IpcRendererEvent } from 'electron';
 import { contextBridge, ipcRenderer } from 'electron';
 import { EOL } from 'os';
 import { isSecondInstanceWin } from '@/cfg/app.json'
-import sleep from '@/util/sleep'
-import { Snowflake } from '@/util/snowflake'
+import { Snowflake, sleep } from 'mm-tool'
 import { net } from '@/renderer/common/enhance/net'
 
 contextBridge.exposeInMainWorld('ipc', {

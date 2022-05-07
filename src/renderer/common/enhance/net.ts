@@ -1,7 +1,6 @@
-import { queryParams } from "@/util";
+import { queryParams } from "mm-tool";
 
 import { Headers } from "node-fetch";
-
 
 
 /**

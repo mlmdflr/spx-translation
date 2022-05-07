@@ -1,8 +1,7 @@
 //@ts-nocheck
 import net from "../enhance/net-request"
 import { JSDOM } from "jsdom";
-import { random } from "@/util";
-import pageUtil from "@/util/page.util";
+import { random, PageUtil } from "mm-tool";
 
 
 export async function pupImg(name: string) {
@@ -14,7 +13,7 @@ export async function pupImg(name: string) {
         /**
          * 计算总页数
          */
-        let totalPage = pageUtil.totalPage(totalCount, 24)
+        let totalPage = PageUtil.totalPage(totalCount, 24)
         /**
          * 关键字搜索不到则抛出异常
          */

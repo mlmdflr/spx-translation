@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+
     <Head :eventShow="true" :max-show="false" :min-show="false" />
     <div class="message-info">
       <ElDivider content-position="left">设置老婆关键字</ElDivider>
@@ -28,12 +29,7 @@
         <ElRadio :label="0">不设置</ElRadio>
       </ElRadioGroup>
       <ElSelect style="float: right;" v-model="lang" @change="langChange" size="small">
-        <ElOption
-          v-for="item in Object.keys(objLangs)"
-          :key="item"
-          :label="objLangs[item]"
-          :value="item"
-        />
+        <ElOption v-for="item in Object.keys(objLangs)" :key="item" :label="objLangs[item]" :value="item" />
       </ElSelect>
       <div class="close">
         <ElButton v-if="restShow" type="info" plain @click="restart">立即重启</ElButton>
@@ -50,7 +46,7 @@ import customize from '@/renderer/store/customize';
 
 import { windowClose, windowShow, } from '@/renderer/common/window';
 
-import net from "@/util/net";
+import { bytesToSize } from "mm-tool";
 
 import Head from '@/renderer/views/components/head/index.vue';
 import {
@@ -85,7 +81,7 @@ let restShow = ref(false)
 
 let lang = ref(argsData.data.htmlLang)
 
-let getCache = () => window.ipc.invoke('get:cache').then(res => cacheSize.value = net.bytesToSize(res).bytes + net.bytesToSize(res).unit)
+let getCache = () => window.ipc.invoke('get:cache').then(res => cacheSize.value = bytesToSize(res).bytes + bytesToSize(res).unit)
 
 getCache()
 

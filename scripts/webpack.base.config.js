@@ -16,6 +16,9 @@ module.exports = {
       dist: resolve('dist'),
       '@': resolve('src'),
       canvas: false
+    },
+    fallback: {
+      'url': false
     }
   },
   module: {
