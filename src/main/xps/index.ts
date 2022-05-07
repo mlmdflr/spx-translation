@@ -1,4 +1,4 @@
-import sleep from "@/util/sleep"
+import { sleep } from "mm-tool"
 import { BrowserWindow, HandlerDetails, shell } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
@@ -118,7 +118,7 @@ const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?
                   background-image: url('${res}');
                 } 
             `).catch(() => { })
-      }).catch(()=>{})
+      }).catch(() => { })
     })
 
     //关闭创建新窗体

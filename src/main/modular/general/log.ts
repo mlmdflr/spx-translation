@@ -1,27 +1,62 @@
-import { statSync, writeFileSync, appendFileSync } from 'fs';
-import { sep } from 'path';
-import { app, ipcMain } from 'electron';
-import { dateFormat } from '@/util';
-import { EOL } from 'os';
+import { statSync, writeFileSync, appendFileSync } from "fs";
+import { sep } from "path";
+import { app, ipcMain } from "electron";
+import { EOL } from "os";
 
-const logFile: string = app.getPath('logs');
+const logFile: string = app.getPath("logs");
+
+function write(type: string, data: string) {
+  const date = new Date();
+  const path =
+    logFile +
+    `${sep}${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date
+      .getDate()
+      .toString()
+      .padStart(2, "0")}.${type}.log`;
+  const str = `[${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}] [${type}] ${data}${EOL}`;
+  try {
+    statSync(path);
+  } catch (e) {
+    writeFileSync(path, str);
+    return;
+  }
+  appendFileSync(path, str);
+}
 
 /**
  * info日志
  * @param val
  */
 export function logInfo(...val: any): void {
-  const path = logFile + `${sep}info-${dateFormat('yyyy-MM-dd')}.log`;
-  let data = '';
+  let data = "";
   val.forEach((e: any) => {
     try {
-      if (typeof e === 'object') data += JSON.stringify(e);
+      if (typeof e === "object") data += JSON.stringify(e);
       else data += e.toString();
     } catch (e) {
       data += e;
     }
   });
-  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [info] ${data}${EOL}`);
+  write("info", data);
+}
+
+/**
+ * info警告
+ * @param val
+ */
+export function logWarn(...val: any): void {
+  let data = "";
+  val.forEach((e: any) => {
+    try {
+      if (typeof e === "object") data += JSON.stringify(e);
+      else data += e.toString();
+    } catch (e) {
+      data += e;
+    }
+  });
+  write("warn", data);
 }
 
 /**
@@ -29,33 +64,22 @@ export function logInfo(...val: any): void {
  * @param val
  */
 export function logError(...val: any): void {
-  const path = logFile + `${sep}error-${dateFormat('yyyy-MM-dd')}.log`;
-  let data = '';
+  let data = "";
   val.forEach((e: any) => {
     try {
-      if (typeof e === 'object') data += JSON.stringify(e);
+      if (typeof e === "object") data += JSON.stringify(e);
       else data += e.toString();
     } catch (e) {
       data += e;
     }
   });
-  write(path, `[${dateFormat('yy-MM-dd hh:mm:ss')}] [error] ${data}${EOL}`);
-}
-
-function write(path: string, data: string) {
-  try {
-    statSync(path);
-  } catch (e) {
-    writeFileSync(path, data);
-    return;
-  }
-  appendFileSync(path, data);
+  write("error", data);
 }
 
 /**
  * 监听
  */
 export function logOn() {
-  ipcMain.on('log-info', async (event, args) => logInfo(...args));
-  ipcMain.on('log-error', async (event, args) => logError(...args));
+  ipcMain.on("log-info", async (event, args) => logInfo(...args));
+  ipcMain.on("log-error", async (event, args) => logError(...args));
 }

@@ -2,7 +2,7 @@ import { app, ipcMain, shell } from 'electron';
 import { resolve } from 'path';
 import { logError } from '@/main/modular/general/log';
 import Window from '@/main/modular/window';
-import { isNull } from '@/util';
+import { isNull } from 'mm-tool';
 
 import { isDisableHardwareAcceleration, isSecondInstanceWin } from '@/cfg/app.json';
 import { customize, opt } from '@/cfg/window.json';

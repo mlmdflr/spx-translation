@@ -1,6 +1,5 @@
-# xps-google-translation
-
-大体是通过注入js和css把谷歌翻译做的更像桌面端 (有个凑合能用的截屏翻译)
+# spx-translation
+聚合翻译程序
 
 ## 二开的一些库
 

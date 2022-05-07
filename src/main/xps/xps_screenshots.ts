@@ -4,8 +4,7 @@ import Window from "../modular/window";
 import Screenshots from "./screenshots/screenshots";
 import tesseract from "./xps_tesseract";
 import { getJson } from ".";
-import { isNull } from "@/util";
-import { Snowflake } from "@/util/snowflake";
+import { isNull,Snowflake } from "mm-tool";
 import { logError } from "../modular/general/log";
 
 export default class screenshots {
