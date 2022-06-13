@@ -3,7 +3,7 @@ import { BrowserWindow, HandlerDetails, shell } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
-import { pupImg } from "../modular/pup";
+import { pupImg, pupImgApi } from "../modular/pup";
 import Window from '../modular/window';
 import windowCfg from '@/cfg/window.json'
 
@@ -95,9 +95,7 @@ const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?
                 opacity:  ${json.ggopacity};
               }
         `).catch(() => { });
-      // 
 
-      //
       win.webContents.executeJavaScript(`
           document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
           let sid =  setInterval(()=>{
@@ -110,7 +108,7 @@ const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?
             }
           },200)
           `).catch(() => { })
-      pupImg((await getJson()).wifekeyword).then(res => {
+      pupImgApi((await getJson()).wifekeyword).then(res => {
         win.webContents.insertCSS(` 
                 #yDmH0d{
                   background-size:100% 100%;

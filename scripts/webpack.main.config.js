@@ -26,6 +26,6 @@ module.exports = (env) => {
   if (env === 'production') config.devtool = base.devtool;
 
   for (const i in dependencies) config.externals[i] = `require("${i}")`;
-
+  config.externals['electron-screenshots'] = 'require("electron-screenshots")'
   return config;
 };

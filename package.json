@@ -1,7 +1,7 @@
 {
   "name": "xps-google-translation",
   "productName": "xps-google-translation",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "description": "electron-vue3 和 谷歌翻译web 开发",
   "main": "dist/js/main.js",
   "author": {
@@ -17,14 +17,15 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.177",
+    "@swc/core": "^1.2.198",
     "@types/jsdom": "^16.2.14",
     "@vue/compiler-sfc": "^3.2.33",
     "css-loader": "^6.7.1",
-    "electron": "18.2.0",
+    "electron": "17.4.7",
     "electron-builder": "^23.0.3",
     "electron-rebuild": "^3.2.7",
-    "element-plus": "^2.1.11",
+    "electron-screenshots": "^0.5.1",
+    "element-plus": "^2.2.5",
     "html-webpack-plugin": "^5.5.0",
     "mm-tool": "^1.0.0",
     "node-abort-controller": "^3.0.1",
@@ -43,7 +44,6 @@
   },
   "dependencies": {
     "jsdom": "^19.0.0",
-    "rubickbase": "^1.4.2",
     "tesseract.js": "^2.1.5"
   }
 }
