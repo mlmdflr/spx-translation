@@ -12,7 +12,7 @@ declare namespace NetReq {
         type: AGENCY_TYPE
     }
     interface TimeOutAbort {
-        signal: AbortSignal;
+        signal: any;
         id: NodeJS.Timeout;
     }
     interface NetOpt extends RequestInit {

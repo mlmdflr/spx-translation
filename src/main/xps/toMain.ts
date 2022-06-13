@@ -10,10 +10,10 @@ export async function globalization(lang: GoogleTranslate.desiredLang, tld: Goog
         },
         {
             show: false,
-            frame: false,
+            frame: false
         }
     );
-    await init(0,tld)
+    await init(0, tld)
 }
 
 
@@ -27,10 +27,10 @@ export async function windowRegister() {
     // 窗口
     switch (json.default) {
         case 1:
-            globalization(json_hl_lang,'cn')
+            globalization(json_hl_lang, 'cn')
             break;
         case 2:
-            globalization(json_hl_lang,'com')
+            globalization(json_hl_lang, 'com')
             break;
         default:
             // 选择创建翻译窗体
@@ -43,10 +43,10 @@ export async function windowRegister() {
                         app.exit(0)
                         break;
                     case 1:
-                        globalization(json_hl_lang,'cn')
+                        globalization(json_hl_lang, 'cn')
                         break;
                     case 2:
-                        globalization(json_hl_lang,'com')
+                        globalization(json_hl_lang, 'com')
                         break;
                 }
             })

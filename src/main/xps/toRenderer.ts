@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain, session } from "electron"
 import { logError } from "../modular/general/log";
-import { getSearchCount, pupImg } from "../modular/pup"
+import { getSearchCount, getSearchCountApi, pupImg, pupImgApi } from "../modular/pup"
 import Window from '../modular/window';
 import { getJson, setCfg, init } from ".";
 import Shortcut from "../modular/enhance/shortcut";
@@ -17,7 +17,7 @@ export const xpsOn = () => {
    * 向渲染进程提供切换 背景图片
    */
   ipcMain.handle('switch-background', async (event, args) => {
-    pupImg((await getJson()).wifekeyword).then(res => {
+    pupImgApi((await getJson()).wifekeyword).then(res => {
       (Window.get(0) as BrowserWindow).webContents.insertCSS(`
           #yDmH0d{
             background-size:100% 100%;
@@ -32,7 +32,7 @@ export const xpsOn = () => {
    * 向渲染进程提供搜索关键字背景图片的数量
    */
   ipcMain.on('get-search-count', async (event, args) => {
-    event.returnValue = await getSearchCount(args)
+    event.returnValue = await getSearchCountApi(args)
   })
 
 

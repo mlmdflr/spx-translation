@@ -1,17 +1,16 @@
 import gShortcut from "@/main/modular/enhance/shortcut";
 import translate from "./google-translate-api";
 import Window from "../modular/window";
-import Screenshots from "./screenshots/screenshots";
+import Screenshots from "electron-screenshots";
 import tesseract from "./xps_tesseract";
 import { getJson } from ".";
-import { isNull,Snowflake } from "mm-tool";
+import { isNull, Snowflake } from "mm-tool";
 import { logError } from "../modular/general/log";
 
 export default class screenshots {
     async on() {
         const cfg = await getJson();
-        const screenshots = new Screenshots()
-
+        const screenshots = new Screenshots({ singleWindow: true })
         if (cfg.orc.open && cfg.hotKey.screenshotTranslate) {
             gShortcut.register_id({
                 id: 666,
@@ -19,6 +18,14 @@ export default class screenshots {
                 callback: () => {
                     Window.get(0)?.hide()
                     screenshots.startCapture()
+                    gShortcut.register_id({
+                        id: 777,
+                        key: "esc",
+                        callback: () => {
+                            if (screenshots.$win?.isFocused()) screenshots.endCapture()
+                            gShortcut.unregister_id(777)
+                        }
+                    })
                 }
             })
 
