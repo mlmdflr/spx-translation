@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <Head :eventShow="true" :max-show="false" :min-show="false" />
+    <Head :eventShow="false" :max-show="false" :min-show="false" />
     <div class="message-info">
       <ElDivider content-position="left">设置老婆关键字</ElDivider>
       <ElRow :gutter="30">
@@ -31,6 +31,13 @@
       <ElSelect style="float: right;" v-model="lang" @change="langChange" size="small">
         <ElOption v-for="item in Object.keys(objLangs)" :key="item" :label="objLangs[item]" :value="item" />
       </ElSelect>
+      <ElDivider content-position="left">
+        <span style="padding: 10px;">网站翻译</span>
+        <ElRadioGroup v-model="website_default">
+          <ElRadio label="electron">electron</ElRadio>
+          <ElRadio label="browser">系统</ElRadio>
+        </ElRadioGroup>
+      </ElDivider>
       <div class="close">
         <ElButton v-if="restShow" type="info" plain @click="restart">立即重启</ElButton>
         <ElButton @click="close">确定</ElButton>
@@ -88,6 +95,7 @@ getCache()
 let wifekeyword = ref(argsData.data?.wifekeyword);
 let ggopacity = ref(argsData.data?.ggopacity);
 let _default = ref(argsData.data?.default);
+let website_default = ref(argsData.data?.webOpenmMode)
 
 let delCache = () => window.ipc.invoke('clear:cache').then(res => getCache()).then(res => ElMessage({
   message: '清除缓存成功',
@@ -100,6 +108,7 @@ function restart() {
   argsData.data.ggopacity = ggopacity.value;
   argsData.data.default = _default.value
   argsData.data.htmlLang = lang.value
+  argsData.data.webOpenmMode = website_default.value
   window.ipc.invoke('updateCfg', argsData.data).then(() => relaunch(true))
 }
 
@@ -109,6 +118,7 @@ function close() {
   argsData.data.ggopacity = ggopacity.value;
   argsData.data.default = _default.value
   argsData.data.htmlLang = lang.value
+  argsData.data.webOpenmMode = website_default.value
   window.ipc.invoke('updateCfg', argsData.data);
 }
 

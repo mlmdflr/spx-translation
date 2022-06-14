@@ -1,6 +1,6 @@
 import { BrowserWindow, ipcMain, session } from "electron"
 import { logError } from "../modular/general/log";
-import { getSearchCount, getSearchCountApi, pupImg, pupImgApi } from "../modular/pup"
+import { getSearchCountApi, pupImgApi } from "../modular/pup"
 import Window from '../modular/window';
 import { getJson, setCfg, init } from ".";
 import Shortcut from "../modular/enhance/shortcut";
