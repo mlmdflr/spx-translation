@@ -129,6 +129,7 @@ async function _load(win: BrowserWindow) {
  * 窗口加载
  */
 async function load(win: BrowserWindow) {
+
   // 注入初始化代码
   win.webContents.on('did-finish-load', () => {
     if ('route' in win.customize) win.webContents.send(`window-load`, win.customize)
@@ -232,7 +233,7 @@ export class Window {
     const win = browserWindowInit(customize, opt);
 
     // 模态框弹出父窗体模糊
-    if (win.isModal() && win.customize.parentId !== undefined) this.get(win.customize.parentId)?.webContents.insertCSS(`body{filter:blur(5px);}`).then((key) => Window.getInstance().winId_insertCSS.set((opt.parent?.customize?.id ?? 'default').toString(), key))
+    if (win.isModal() && win.customize.parentId !== undefined) this.get(win.customize.parentId)?.webContents.insertCSS(`html{filter:blur(5px);}`).then((key) => Window.getInstance().winId_insertCSS.set((opt.parent?.customize?.id ?? 'default').toString(), key))
 
 
     // 路由 > html文件 > 网页
@@ -243,7 +244,7 @@ export class Window {
           const appPort = readFileSync(join('.port'), 'utf8');
           win.webContents.openDevTools({ mode: 'detach' });
           if ('route' in win.customize) win.customize.baseUrl = `http://localhost:${appPort}`;
-          load(win)
+          return load(win)
         });
       } catch (e) {
         throw 'not found .port';
@@ -251,7 +252,7 @@ export class Window {
       return;
     }
     if ('route' in win.customize) win.customize.baseUrl = join(__dirname, '../index.html');
-    load(win)
+    return load(win)
   }
 
   /**

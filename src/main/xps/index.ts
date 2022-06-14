@@ -1,9 +1,9 @@
-import { sleep } from "mm-tool"
-import { BrowserWindow, HandlerDetails, shell } from "electron";
+import { sleep, Snowflake } from "mm-tool"
+import { BrowserWindow, HandlerDetails, session, shell } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";
 import { logInfo } from "../modular/general/log";
-import { pupImg, pupImgApi } from "../modular/pup";
+import { pupImgApi } from "../modular/pup";
 import Window from '../modular/window';
 import windowCfg from '@/cfg/window.json'
 
@@ -127,9 +127,27 @@ const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?
         'u',
         'client']) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()))) {
         getJson().then(json => {
-          if (json.webOpenmMode === 'electron') Window.create({
-            url: details.url
-          }, windowCfg.opt)
+          if (json.webOpenmMode === 'electron') {
+            let id = new Snowflake(1n, 2n).nextId()
+            let ourl = new URLSearchParams(details.url).get('u') as string;
+            Window.create({
+              id,
+              url: details.url
+            }, { ...windowCfg.opt })
+            // let webTr = Window.get(id)
+            // webTr?.webContents.once('did-finish-load', async () => {
+            //   webTr?.webContents.executeJavaScript(`
+            //       function isChromePDFViewer() {
+            //         return (
+            //             document.body &&
+            //             document.body.children[0] &&
+            //             document.body.children[0].type === "application/pdf"
+            //         );
+            //     }
+            //      if (!isChromePDFViewer()) location.href = '${details.url}'
+            //   `)
+            // })
+          }
           else shell.openExternal(details.url);
         })
       }
