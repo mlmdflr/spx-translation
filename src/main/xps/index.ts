@@ -121,32 +121,35 @@ const init = async (windowId: number | bigint, df: GoogleTranslate.origin, time?
 
     //关闭创建新窗体
     win.webContents.setWindowOpenHandler((details: HandlerDetails): { action: "deny" } => {
+      let us = new URLSearchParams(details.url);
       if (JSON.stringify(['https://translate.google.com/translate?sl',
         'tl',
         'hl',
         'u',
-        'client']) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()))) {
-        getJson().then(json => {
+        'client'].sort()) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()).sort())) {
+        getJson().then(async json => {
           if (json.webOpenmMode === 'electron') {
             let id = new Snowflake(1n, 2n).nextId()
-            let ourl = new URLSearchParams(details.url).get('u') as string;
-            Window.create({
+            await Window.create({
               id,
               url: details.url
             }, { ...windowCfg.opt })
-            // let webTr = Window.get(id)
-            // webTr?.webContents.once('did-finish-load', async () => {
-            //   webTr?.webContents.executeJavaScript(`
-            //       function isChromePDFViewer() {
-            //         return (
-            //             document.body &&
-            //             document.body.children[0] &&
-            //             document.body.children[0].type === "application/pdf"
-            //         );
-            //     }
-            //      if (!isChromePDFViewer()) location.href = '${details.url}'
-            //   `)
-            // })
+            Window.get(id)?.webContents.setWindowOpenHandler((details: HandlerDetails): { action: "deny" } => {
+              if (JSON.stringify(['https://translate.google.com/website?sl',
+                'tl',
+                'hl',
+                'u',
+                'client'].sort()) === JSON.stringify(Array.from(new URLSearchParams(details.url).keys()).sort())
+                ||
+                new URL(details.url).host.includes('.translate.goog')
+              ) {
+                Window.get(id)?.webContents.loadURL(details.url)
+              } else {
+                us.set('u', details.url)
+                Window.get(id)?.webContents.loadURL(decodeURIComponent(us.toString()))
+              }
+              return { action: "deny" }
+            })
           }
           else shell.openExternal(details.url);
         })
