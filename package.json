@@ -1,7 +1,7 @@
 {
   "name": "xps-google-translation",
   "productName": "xps-google-translation",
-  "version": "5.4.1",
+  "version": "5.4.2",
   "description": "electron-vue3 和 谷歌翻译web 开发",
   "main": "dist/js/main.js",
   "author": {
@@ -20,7 +20,7 @@
     "@swc/core": "^1.2.198",
     "@vue/compiler-sfc": "^3.2.37",
     "css-loader": "^6.7.1",
-    "electron": "17.4.7",
+    "electron": "18.3.5",
     "electron-builder": "^23.0.3",
     "electron-rebuild": "^3.2.7",
     "element-plus": "^2.2.5",

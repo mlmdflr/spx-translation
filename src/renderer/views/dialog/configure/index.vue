@@ -51,7 +51,7 @@ import { onMounted, ref } from 'vue';
 
 import customize from '@/renderer/store/customize';
 
-import { windowClose, windowShow, } from '@/renderer/common/window';
+import { windowClose, windowShow } from '@/renderer/common/window';
 
 import { bytesToSize } from "mm-tool";
 
