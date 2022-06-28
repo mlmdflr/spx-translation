@@ -39,9 +39,11 @@ export function browserWindowInit(
       contextIsolation: true,
       nodeIntegration: false,
       devTools: !app.isPackaged,
-      webSecurity: false
+      webSecurity: false,
+      backgroundThrottling:false,
     }
   });
+ 
   if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
     opt.backgroundColor = windowCfg.opt.backgroundColor;
   const isParentId = customize.parentId !== undefined && customize.parentId !== null;
@@ -70,9 +72,9 @@ export function browserWindowInit(
    * @date 2021-09-25 11:54:59
    */
   if ((customize.id !== undefined && customize.id !== null) && !Window.getInstance().checkId(customize.id as number | bigint)) customize.id = new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId()
-
+  
   const win = new BrowserWindow(opt);
-
+  // win.webContents.setFrameRate(60)
   //win32 取消原生窗口右键事件
   process.platform === 'win32' && win.hookWindowMessage(278, () => {
     win.setEnabled(false)
@@ -81,7 +83,6 @@ export function browserWindowInit(
 
   //子窗体关闭父窗体获焦 https://github.com/electron/electron/issues/10616
   if (isParentId) win.once('close', () => parenWin?.focus())
-
 
   win.customize = {
     id: new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId(),
