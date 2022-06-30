@@ -1,7 +1,7 @@
 {
   "compression": "maximum",
-  "productName": "xps-google-translation",
-  "appId": "org.xps-google-translation",
+  "productName": "spx-translation",
+  "appId": "org.spx-translation",
   "copyright": "MIT",
   "asar": true,
   "directories": {
@@ -35,7 +35,7 @@
     "uninstallerSidebar": "resources/build/icons/modern-wizard.bmp",
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "xps-google-translation",
+    "shortcutName": "spx-translation",
     "include": "resources/build/cfg/installer.nsh",
     "menuCategory": false,
     "displayLanguageSelector": false
@@ -73,7 +73,7 @@
   "linux": {
     "icon": "resources/build/icons",
     "target": "AppImage",
-    "executableName": "xps-google-translation"
+    "executableName": "spx-translation"
   },
   "npmRebuild": true,
   "publish": [
@@ -97,5 +97,6 @@
         "**/*"
       ]
     }
-  ]
+  ],
+  "afterPack": "scripts/buildAfterPack.js"
 }

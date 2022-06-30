@@ -15,7 +15,6 @@ import { xpsOn } from './xps/toRenderer';
 import { windowRegister } from './xps/toMain';
 import xs from "./xps/xps_screenshots";
 import xt from "./xps/xps_tesseract";
-import { youdaoOn } from "./xps/youdao-api";
 
 await App.start();
 
@@ -33,9 +32,6 @@ pathOn();//路径模块
 // 托盘
 Tray.create();
 
-
-
-youdaoOn()
 
 xpsOn()
 

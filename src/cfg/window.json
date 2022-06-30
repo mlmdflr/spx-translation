@@ -5,7 +5,7 @@
     "backgroundColor": "#222"
   },
   "customize": {
-    "title": "xps-google-translation",
+    "title": "spx-translation",
     "route": "/home",
     "isMainWin": true
   }

@@ -1,7 +1,7 @@
 import { join } from 'path';
 import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
-import { Snowflake } from "mm-tool";
+import { Snowflake } from "@mlmdflr/tools";
 import windowCfg from '@/cfg/window.json'
 import { workerId, dataCenterId } from '@/cfg/snowflake.json'
 

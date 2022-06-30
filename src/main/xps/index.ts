@@ -1,4 +1,4 @@
-import { sleep, Snowflake } from "mm-tool"
+import { sleep, Snowflake } from "@mlmdflr/tools"
 import { BrowserWindow, HandlerDetails, session, shell } from "electron";
 import { readFile, writeFile } from "../modular/general/file"
 import Global from "../modular/general/global";

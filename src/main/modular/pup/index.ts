@@ -1,5 +1,5 @@
 import net from "../enhance/net-request"
-import { random, PageUtil } from "mm-tool";
+import { random, PageUtil } from "@mlmdflr/tools";
 
 
 export async function pupImgApi(name: string) {

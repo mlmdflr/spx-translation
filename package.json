@@ -1,7 +1,7 @@
 {
-  "name": "xps-google-translation",
-  "productName": "xps-google-translation",
-  "version": "5.4.2",
+  "name": "spx-translation",
+  "productName": "spx-translation",
+  "version": "1.0.0",
   "description": "electron-vue3 和 谷歌翻译web 开发",
   "main": "dist/js/main.js",
   "author": {
@@ -17,31 +17,32 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@swc/core": "^1.2.198",
+    "@mlmdflr/tools": "^1.0.0",
+    "@swc/core": "^1.2.207",
     "@vue/compiler-sfc": "^3.2.37",
+    "asarmor": "^2.1.0-beta.9",
     "css-loader": "^6.7.1",
-    "electron": "18.3.5",
-    "electron-builder": "^23.0.3",
+    "electron": "19.0.6",
+    "electron-builder": "^23.1.0",
     "electron-rebuild": "^3.2.7",
-    "element-plus": "^2.2.5",
+    "element-plus": "^2.2.6",
     "html-webpack-plugin": "^5.5.0",
-    "mm-tool": "^1.0.0",
     "node-abort-controller": "^3.0.1",
     "node-fetch": "^3.2.6",
-    "prettier": "^2.6.2",
-    "sass": "^1.53.3",
-    "sass-loader": "^13.0.0",
+    "prettier": "^2.7.1",
+    "sass": "^1.53.0",
+    "sass-loader": "^13.0.2",
     "style-loader": "^3.3.1",
     "swc-loader": "^0.2.3",
-    "typescript": "^4.7.3",
+    "typescript": "^4.7.4",
     "vue": "^3.2.37",
     "vue-loader": "^17.0.0",
     "vue-router": "^4.0.16",
     "webpack": "^5.73.0",
-    "webpack-dev-server": "^4.9.2"
+    "webpack-dev-server": "^4.9.3"
   },
   "dependencies": {
-    "electron-screenshots": "^0.5.1",
+    "electron-screenshots": "^0.5.4",
     "tesseract.js": "^2.1.5"
   }
 }

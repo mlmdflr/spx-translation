@@ -67,7 +67,7 @@ function startElectron() {
   });
   electronProcess.stderr.on('data', (data) => {
     const msg = data.toString().trim();
-    if (msg)
+    if (msg && msg.indexOf('Request Network.loadNetworkResource failed.') === -1)
       console.log(
         `\x1b[31m[main stderr ${new Date().toLocaleTimeString()}]\x1b[0m: \x1b[1;31m${msg}\x1b[0m`
       );
@@ -82,7 +82,7 @@ function startElectron() {
 
 async function init() {
   await startRenderer();
-  await startMain();  
+  await startMain();
   startElectron();
 }
 

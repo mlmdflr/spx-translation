@@ -53,7 +53,7 @@ import customize from '@/renderer/store/customize';
 
 import { windowClose, windowShow } from '@/renderer/common/window';
 
-import { bytesToSize } from "mm-tool";
+import { bytesToSize } from "@mlmdflr/tools";
 
 import Head from '@/renderer/views/components/head/index.vue';
 import {
