@@ -4,7 +4,7 @@ import Window from "../modular/window";
 import Screenshots from "electron-screenshots";
 import tesseract from "./xps_tesseract";
 import { getJson } from ".";
-import { isNull, Snowflake } from "mm-tool";
+import { isNull, Snowflake } from "@mlmdflr/tools";
 import { logError } from "../modular/general/log";
 
 export default class screenshots {

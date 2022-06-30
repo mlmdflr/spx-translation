@@ -2,7 +2,7 @@ import { createWorker, createScheduler } from "tesseract.js";
 import global from "@/main/modular/general/global";
 import { logError, logInfo } from "../modular/general/log";
 import { getJson } from ".";
-import { isNull } from "mm-tool";
+import { isNull } from "@mlmdflr/tools";
 
 export default class tesseract {
     private static instance: tesseract;

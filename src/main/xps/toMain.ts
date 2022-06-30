@@ -1,6 +1,7 @@
 import Window from '../modular/window';
 import { getJson, init } from ".";
 import { app, BrowserWindow, dialog } from 'electron';
+import { customize } from '@/cfg/window.json';
 
 export async function globalization(lang: GoogleTranslate.desiredLang, tld: GoogleTranslate.origin) {
     Window.create(
@@ -35,7 +36,8 @@ export async function windowRegister() {
         default:
             // 选择创建翻译窗体
             dialog.showMessageBox(undefined as unknown as BrowserWindow, {
-                message: '请选择进入的地址',
+                title: customize.title,
+                message: '请选择进入的地址(可以在設置修改默認進入)',
                 buttons: ['退出', '谷歌翻译中国(免翻)', '谷歌国际']
             }).then(async res => {
                 switch (res.response) {

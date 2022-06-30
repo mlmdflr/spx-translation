@@ -1,4 +1,4 @@
-import { queryParams } from "mm-tool";
+import { queryParams } from "@mlmdflr/tools";
 
 import { Headers } from "node-fetch";
 

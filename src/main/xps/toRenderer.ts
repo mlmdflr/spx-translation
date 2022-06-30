@@ -5,7 +5,7 @@ import Window from '../modular/window';
 import { getJson, setCfg, init } from ".";
 import Shortcut from "../modular/enhance/shortcut";
 import translate from "./google-translate-api";
-import { isNull } from "mm-tool";
+import { isNull } from "@mlmdflr/tools";
 
 
 
