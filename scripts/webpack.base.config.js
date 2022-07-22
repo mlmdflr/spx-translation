@@ -1,5 +1,5 @@
 const { resolve } = require('path');
-
+const WebpackObfuscator = require('webpack-obfuscator');
 module.exports = {
   devtool: 'eval-cheap-source-map',
   experiments: {
@@ -15,7 +15,6 @@ module.exports = {
     alias: {
       dist: resolve('dist'),
       '@': resolve('src'),
-      canvas: false
     },
     fallback: {
       'url': false
@@ -53,7 +52,35 @@ module.exports = {
         generator: {
           filename: 'static/[hash][ext][query]'
         }
-      }
+      },
+      {
+        test: /\.(js)$/,
+        exclude: /(node_modules)/,
+        enforce: 'post',
+        use: {
+          loader: WebpackObfuscator.loader,
+          options: {
+            compact: true,
+            controlFlowFlattening: true,
+            controlFlowFlatteningThreshold: 0.50,
+            deadCodeInjection: true,
+            deadCodeInjectionThreshold: 0.4,
+            debugProtection: false,
+            debugProtectionInterval: true,
+            disableConsoleOutput: true,
+            identifierNamesGenerator: 'hexadecimal',
+            log: false,
+            renameGlobals: false,
+            rotateStringArray: true,
+            selfDefending: true,
+            stringArray: true,
+            stringArrayEncoding: 'base64',
+            stringArrayThreshold: 0.75,
+            transformObjectKeys: true,
+            unicodeEscapeSequence: false
+          }
+        }
+      },
     ]
   }
 };

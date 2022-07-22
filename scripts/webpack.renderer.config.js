@@ -26,7 +26,6 @@ module.exports = (env) => {
     },
     module: {
       rules: [
-        ...base.module.rules,
         {
           test: /\.vue$/,
           loader: 'vue-loader'
@@ -43,7 +42,8 @@ module.exports = (env) => {
             'css-loader',
             'sass-loader'
           ]
-        }
+        },
+        ...base.module.rules,
       ]
     },
     plugins: [

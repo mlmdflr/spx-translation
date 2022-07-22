@@ -2,8 +2,8 @@ import { join } from 'path';
 import type { BrowserWindowConstructorOptions, LoadFileOptions, LoadURLOptions } from 'electron';
 import { app, screen, ipcMain, BrowserWindow } from 'electron';
 import { Snowflake } from "@mlmdflr/tools";
-import windowCfg from '@/cfg/window.json'
-import { workerId, dataCenterId } from '@/cfg/snowflake.json'
+const windowCfg = require('@/cfg/window.json')
+const { workerId, dataCenterId } = require('@/cfg/snowflake.json')
 
 /**
  * 窗口配置
@@ -40,10 +40,10 @@ export function browserWindowInit(
       nodeIntegration: false,
       devTools: !app.isPackaged,
       webSecurity: false,
-      backgroundThrottling:false,
+      backgroundThrottling: false,
     }
   });
- 
+
   if (!opt.backgroundColor && windowCfg.opt.backgroundColor)
     opt.backgroundColor = windowCfg.opt.backgroundColor;
   const isParentId = customize.parentId !== undefined && customize.parentId !== null;
@@ -72,7 +72,7 @@ export function browserWindowInit(
    * @date 2021-09-25 11:54:59
    */
   if ((customize.id !== undefined && customize.id !== null) && !Window.getInstance().checkId(customize.id as number | bigint)) customize.id = new Snowflake(BigInt(workerId), BigInt(dataCenterId)).nextId()
-  
+
   const win = new BrowserWindow(opt);
   // win.webContents.setFrameRate(60)
   //win32 取消原生窗口右键事件

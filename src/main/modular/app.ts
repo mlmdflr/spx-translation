@@ -4,8 +4,8 @@ import { logError } from '@/main/modular/general/log';
 import Window from '@/main/modular/window';
 import { isNull } from '@mlmdflr/tools';
 
-import { isDisableHardwareAcceleration, isSecondInstanceWin } from '@/cfg/app.json';
-import { customize, opt } from '@/cfg/window.json';
+const { isDisableHardwareAcceleration, isSecondInstanceWin } = require('@/cfg/app.json');
+const { customize, opt } = require('@/cfg/window.json');
 
 export class App {
   private static instance: App;

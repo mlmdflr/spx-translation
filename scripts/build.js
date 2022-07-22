@@ -9,7 +9,18 @@ const main = require('./webpack.main.config'); //主进程
 const renderer = require('./webpack.renderer.config'); //子进程
 let [, , arch, _notP] = process.argv;
 
-const optional = ['win', 'win32', 'win64', 'winp', 'winp32', 'winp64', 'darwin', 'mac', 'linux'];
+const optional = [
+  'web',
+  'win',
+  'win32',
+  'win64',
+  'winp',
+  'winp32',
+  'winp64',
+  'darwin',
+  'mac',
+  'linux'
+];
 const linuxOptional = ['AppImage', 'snap', 'deb', 'rpm', 'pacman'];
 const notP_optional = '-notp'
 
@@ -55,11 +66,27 @@ function checkInput(str) {
   return true;
 }
 
+async function rendererBuild() {
+  return new Promise((resolve, reject) => {
+    deleteFolderRecursive(path.resolve('dist')); //清除dist
+    console.log('\x1B[34m[web build start]\x1B[0m');
+    webpack([{ ...renderer('production') }], (err, stats) => {
+      if (err || stats.hasErrors()) reject(error);
+      console.log('\x1B[32m[web build success] \x1B[0m');
+      resolve();
+    });
+  })
+}
+
+
 async function core(arch) {
   arch = arch.trim();
   let archTag = '';
   let archPath = '';
   switch (arch) {
+    case 'web':
+      await rendererBuild();
+      process.exit(0);
     case 'win':
     case 'win32':
     case 'win64':
@@ -151,9 +178,9 @@ if (!arch) {
       return;
     }
     if (strs[1] && strs[1] === notP_optional) delete buildConfig.afterPack
-    if (!checkInput(str)) return;
+    if (!checkInput(strs[0])) return;
     r.pause();
-    core(str);
+    core(strs[0]);
   });
 } else {
   if (_notP) delete buildConfig.afterPack
