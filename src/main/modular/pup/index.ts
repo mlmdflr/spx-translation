@@ -1,4 +1,4 @@
-import net from "../enhance/net-request"
+import { net } from "@/main/modular/net-request/net";
 import { random, PageUtil } from "@mlmdflr/tools";
 
 
@@ -22,7 +22,7 @@ export async function pupImgApi(name: string) {
          * 随机页码
          */
         const page_rm = random(1, totalPage === 1 ? 1 : totalPage - 1)
-        const search_end = await net<any>(`https://wallhaven.cc/api/v1/search?q=${name}&page=${page_rm}`, { timeout: 3000 })
+        const search_end = await net<any>(`https://wallhaven.cc/api/v1/search?q=${name}&page=${page_rm}`, { timeout: 3000, type: "JSON" })
 
         /**
          * 随机图片处理
@@ -40,7 +40,7 @@ export async function pupImgApi(name: string) {
 export async function getSearchCountApi(name: string) {
     let search: any
     try {
-        search = await net<any>(`https://wallhaven.cc/api/v1/search?q=${name}`, { timeout: 3000 })
+        search = await net<any>(`https://wallhaven.cc/api/v1/search?q=${name}`, { timeout: 3000, type: "JSON" })
     } catch (error) {
         return undefined
     }

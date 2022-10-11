@@ -1,6 +1,5 @@
 import { queryParams } from "@mlmdflr/tools";
 
-import { Headers } from "node-fetch";
 
 
 /**

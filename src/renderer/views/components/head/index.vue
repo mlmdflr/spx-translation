@@ -18,8 +18,7 @@
 
 
 <script setup lang='ts' >
-import { windowClose, windowMaxMin, windowMin } from '@/renderer/common/window';
-import customize from '@/renderer/store/customize';
+import { windowClose, windowMaxMin, windowMin } from '@mlmdflr/electron-modules/renderer/window';
 
 const props = defineProps({
   eventShow: {
@@ -43,7 +42,7 @@ const props = defineProps({
 const isMacintosh = window.environment.platform === 'darwin';
 
 
-let title = customize.get().title
+let title = window.customize.title
 
 function min() {
   windowMin();

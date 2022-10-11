@@ -1,40 +1,48 @@
-import App from './modular/app';
-import Window from './modular/window';
-import Global from './modular/general/global';
-import Tray from './modular/additional/tray';
-import { logOn } from './modular/general/log';
-import { pathOn } from './modular/general/path';
-import { fileOn } from './modular/general/file';
-import Shortcut from "./modular/enhance/shortcut";
+import { appInstance } from '@mlmdflr/electron-modules/main/app';
+import { TrayInstance } from '@mlmdflr/electron-modules/main/tray';
+import { windowInstance } from "@mlmdflr/electron-modules/main/window";
+import { Session } from '@mlmdflr/electron-modules/main/session';
+import { renderOn } from './business/toRenderer';
+import { windowRegister } from './business/toMain';
+import screenshots from "./business/screenshots";
+import tesseract from "./business/tesseract";
+import ico from '@/assets/icon/tray.png';
+import { join } from "path";
+import { readFile } from "@mlmdflr/electron-modules/main/file";
+import { app } from 'electron';
 
-import Session from './modular/general/session';
-import Dialog from './modular/additional/dialog';
-import Menu from './modular/additional/menu';
+await appInstance.start();
 
-import { xpsOn } from './xps/toRenderer';
-import { windowRegister } from './xps/toMain';
-import xs from "./xps/xps_screenshots";
-import xt from "./xps/xps_tesseract";
-
-await App.start();
-
-// 主要模块
-Global.on();//全局模块
-Window.on();//窗口模块
-Shortcut.on();//快捷键模块
-Tray.on();//托盘模块
-logOn();//日志模块
-
-// 可选模块
-fileOn();//文件模块
-pathOn();//路径模块
-
-// 托盘
-Tray.create();
+const dataUrl = 'data:image/png;base64,' + await readFile(join(__dirname, `../${ico}`), { encoding: 'base64' })
+TrayInstance.create(dataUrl);
 
 
-xpsOn()
+app.isPackaged && windowInstance.setDefaultCfg({
+    defaultLoadUrl: join(__dirname, '../index.html'),
+    defaultRoutePreload: join(__dirname, './preload.js'),
+    defaultUrlPreload: join(__dirname, './preload.url.js'),
+    defaultExtraOptions: {
+        isSetWindowOpenHandler: false
+    }
+})
 
+!app.isPackaged && windowInstance.setDefaultCfg({
+    defaultLoadUrl: `http://localhost:${await readFile(join('.port'), { encoding: 'utf-8' })}`,
+    defaultRoutePreload: join(__dirname, './preload.js'),
+    defaultUrlPreload: join(__dirname, './preload.url.js'),
+    defaultExtraOptions: {
+        isSetWindowOpenHandler: false
+    }
+})
+const dfSess = new Session();
+dfSess.on()
+const googleSess = new Session(`persist:google`);
+googleSess.on()
+const deeplSess = new Session(`persist:deepl`);
+deeplSess.on()
 windowRegister()
 
-App.use([Session, Dialog, Menu, xs, xt]);
+renderOn(dfSess.session, googleSess.session, deeplSess.session)
+
+screenshots()
+new tesseract().on()

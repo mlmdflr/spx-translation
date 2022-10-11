@@ -1,14 +1,14 @@
 <template>
   <div class="container">
+
     <Head :eventShow="false" />
     <div class="message-info">
       <ElDescriptions size="small" :border="true" :column="1" title="详细信息">
         <ElDescriptionsItem label="msg">{{ data.msg }}</ElDescriptionsItem>
         <ElDescriptionsItem label="code">
-          <ElCheckTag
-            size="small"
-            @click="goPage('https://source.chromium.org/chromium/chromium/src/+/master:net/base/net_error_list.h')"
-          >{{ data.code }}</ElCheckTag>
+          <ElCheckTag size="small"
+            @click="goPage('https://source.chromium.org/chromium/chromium/src/+/master:net/base/net_error_list.h')">{{
+            data.code }}</ElCheckTag>
         </ElDescriptionsItem>
         <ElDescriptionsItem label="url">
           <ElLink :underline="false" @click="openUrl(data.url)">{{ data.url }}</ElLink>
@@ -30,9 +30,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 
-import customize from '@/renderer/store/customize';
 
-import { windowClose, windowShow } from '@/renderer/common/window';
+import { windowClose, windowShow } from '@mlmdflr/electron-modules/renderer/window';
 
 import Head from '@/renderer/views/components/head/index.vue';
 import {
@@ -44,12 +43,12 @@ import {
   ElRow,
   ElCol
 } from 'element-plus';
-import { openUrl, relaunch } from '@/renderer/common/app';
+import { openUrl, relaunch } from '@mlmdflr/electron-modules/renderer/app';
 
 import { getCfg, setCfg, relaunchShortcutRegister } from "@/renderer/common/xps";
 
 
-const data: { code: number, msg: string, url: string } = customize.get().data;
+const data: { code: number, msg: string, url: string } = window.customize.data;
 
 
 

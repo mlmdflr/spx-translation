@@ -22,14 +22,12 @@
           <ElButton type="warning" plain size="small" @click="delCache">清除缓存</ElButton>
         </ElCol>
       </ElRow>
-      <ElDivider content-position="left">默认源</ElDivider>
-      <ElRadioGroup v-model="_default">
-        <ElRadio :label="1">.cn</ElRadio>
-        <ElRadio :label="2">.com</ElRadio>
-        <ElRadio :label="0">不设置</ElRadio>
-      </ElRadioGroup>
-      <ElSelect style="float: right;" v-model="lang" @change="langChange" size="small">
+      <ElDivider content-position="left">页面语言</ElDivider>
+      谷歌: <ElSelect v-model="lang" @change="langChange" size="small">
         <ElOption v-for="item in Object.keys(objLangs)" :key="item" :label="objLangs[item]" :value="item" />
+      </ElSelect>
+      deepl: <ElSelect v-model="deeplLang" @change="deeplLangChange" size="small">
+        <ElOption v-for="item in Object.keys(objdeeplLangs)" :key="item" :label="objdeeplLangs[item]" :value="item" />
       </ElSelect>
       <ElDivider content-position="left">
         <span style="padding: 10px;">网站翻译</span>
@@ -49,9 +47,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
-import customize from '@/renderer/store/customize';
 
-import { windowClose, windowShow } from '@/renderer/common/window';
+
+import { windowClose, windowShow, } from '@mlmdflr/electron-modules/renderer/window';
 
 import { bytesToSize } from "@mlmdflr/tools";
 
@@ -72,15 +70,24 @@ import {
 
 import { ElSlider } from "element-plus";
 
-import { langs } from "@/main/xps/google-translate-api/languages";
+import { langs } from "@/main/google-translate-api/languages";
+import { langs as deeplLangs } from "@/main/deepl-api/languages";
 
-import { relaunch } from "@/renderer/common/app";
+import { relaunch } from '@mlmdflr/electron-modules/renderer/app';
 
 const objLangs: {
   [key: string]: string
 } = langs
 
-const argsData = customize.get();
+const objdeeplLangs: {
+  [key: string]: string
+} = deeplLangs
+
+
+
+
+
+const argsData = window.customize;
 
 let cacheSize = ref('')
 
@@ -88,13 +95,16 @@ let restShow = ref(false)
 
 let lang = ref(argsData.data.htmlLang)
 
+let deeplLang = ref(argsData.data.deeplHtmlLang)
+
+
+
 let getCache = () => window.ipc.invoke('get:cache').then(res => cacheSize.value = bytesToSize(res).bytes + bytesToSize(res).unit)
 
 getCache()
 
 let wifekeyword = ref(argsData.data?.wifekeyword);
 let ggopacity = ref(argsData.data?.ggopacity);
-let _default = ref(argsData.data?.default);
 let website_default = ref(argsData.data?.webOpenmMode)
 
 let delCache = () => window.ipc.invoke('clear:cache').then(res => getCache()).then(res => ElMessage({
@@ -106,8 +116,8 @@ let delCache = () => window.ipc.invoke('clear:cache').then(res => getCache()).th
 function restart() {
   argsData.data.wifekeyword = wifekeyword.value
   argsData.data.ggopacity = ggopacity.value;
-  argsData.data.default = _default.value
   argsData.data.htmlLang = lang.value
+  argsData.data.deeplHtmlLang = deeplLang.value
   argsData.data.webOpenmMode = website_default.value
   window.ipc.invoke('updateCfg', argsData.data).then(() => relaunch(true))
 }
@@ -116,14 +126,19 @@ function close() {
   windowClose();
   argsData.data.wifekeyword = wifekeyword.value
   argsData.data.ggopacity = ggopacity.value;
-  argsData.data.default = _default.value
   argsData.data.htmlLang = lang.value
+  argsData.data.deeplHtmlLang = deeplLang.value
   argsData.data.webOpenmMode = website_default.value
   window.ipc.invoke('updateCfg', argsData.data);
 }
 
 function langChange(val: string) {
   lang.value = val
+  restShow.value = true
+}
+
+function deeplLangChange(val: string) {
+  deeplLang.value = val
   restShow.value = true
 }
 

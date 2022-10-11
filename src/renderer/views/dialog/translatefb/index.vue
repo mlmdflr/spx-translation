@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
-import customize from '@/renderer/store/customize';
 
-import { windowClose, windowShow, windowMessageOn } from '@/renderer/common/window';
+import { windowClose, windowShow, windowMessageOn } from '@mlmdflr/electron-modules/renderer/window';
 
 import Head from '@/renderer/views/components/head/index.vue';
 import {
@@ -22,7 +21,7 @@ import {
     ElOption
 } from 'element-plus';
 
-import { langs } from "@/main/xps/google-translate-api/languages";
+import { langs } from "@/main/google-translate-api/languages";
 
 
 const objLangs: {
@@ -39,6 +38,8 @@ let o = ref('')
 
 let g = ref('')
 
+let customize = window.customize
+
 
 
 function langChange() {
@@ -47,7 +48,7 @@ function langChange() {
     window.ipc.invoke('translate-text', { o: o.value, lang_o: lang_o.value, lang_g: lang_g.value })
         .then(res => {
             console.log(res);
-            
+
             g.value = res.text
         })
         .catch(err => {
@@ -60,21 +61,21 @@ function langChange() {
         })
 }
 
-windowMessageOn('tesseract:ok:' + customize.get().id, (_, data) => {
+windowMessageOn((_, data) => {
     ell.close()
     console.log('tesseract', data);
     o.value = data
-})
+}, 'tesseract:ok:' + customize.id)
 
-windowMessageOn('translate:ok:' + customize.get().id, (_, data) => {
+windowMessageOn((_, data) => {
     ell.close();
     console.log('translate', data);
     g.value = data.g
     o.value = data.o
-})
+}, 'translate:ok:' + customize.id)
 
 
-windowMessageOn('translate:err:' + customize.get().id, (_, err) => {
+windowMessageOn((_, err) => {
     ell.close();
     ElNotification({
         position: 'top-right',
@@ -82,7 +83,7 @@ windowMessageOn('translate:err:' + customize.get().id, (_, err) => {
         message: err,
         type: 'error',
     })
-})
+}, 'translate:err:' + customize.id)
 
 onMounted(() => windowShow())
 
@@ -96,54 +97,25 @@ onMounted(() => windowShow())
     <div class="container">
         <el-container>
             <el-header height="25px">
+
                 <Head :event-show="false" />
             </el-header>
             <el-main>
                 <div>
-                    <ElSelect
-                        style="float: right;"
-                        v-model="lang_o"
-                        @change="langChange"
-                        size="small"
-                    >
-                        <ElOption
-                            v-for="item in Object.keys(objLangs)"
-                            :key="item"
-                            :label="objLangs[item]"
-                            :value="item"
-                        />
+                    <ElSelect style="float: right;" v-model="lang_o" @change="langChange" size="small">
+                        <ElOption v-for="item in Object.keys(objLangs)" :key="item" :label="objLangs[item]"
+                            :value="item" />
                     </ElSelect>
                     <span class="color">原文:</span>
-                    <el-input
-                        input-style="background: #eeeeee;"
-                        v-model="o"
-                        :rows="7"
-                        resize="none"
-                        type="textarea"
-                    />
+                    <el-input input-style="background: #eeeeee;" v-model="o" :rows="7" resize="none" type="textarea" />
                 </div>&nbsp;
                 <div>
-                    <ElSelect
-                        style="float: right;"
-                        v-model="lang_g"
-                        @change="langChange"
-                        size="small"
-                    >
-                        <ElOption
-                            v-for="item in Object.keys(objLangs)"
-                            :key="item"
-                            :label="objLangs[item]"
-                            :value="item"
-                        />
+                    <ElSelect style="float: right;" v-model="lang_g" @change="langChange" size="small">
+                        <ElOption v-for="item in Object.keys(objLangs)" :key="item" :label="objLangs[item]"
+                            :value="item" />
                     </ElSelect>
                     <span class="color">翻译:</span>
-                    <el-input
-                        input-style="background: #eeeeee;"
-                        v-model="g"
-                        :rows="7"
-                        resize="none"
-                        type="textarea"
-                    />
+                    <el-input input-style="background: #eeeeee;" v-model="g" :rows="7" resize="none" type="textarea" />
                 </div>
             </el-main>
             <el-footer>

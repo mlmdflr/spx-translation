@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import customize from '@/renderer/store/customize';
-import { windowUpdate } from '@/renderer/common/window';
-
+import { customizeUpdate } from '@mlmdflr/electron-modules/renderer/base';
 import pageRoute from '@/renderer/router/modular/page';
 import dialogRoute from '@/renderer/router/modular/dialog';
+import { Customize_Route } from "@mlmdflr/electron-modules/types";
+
 
 const Router = createRouter({
   history: createWebHashHistory(),
@@ -11,10 +11,10 @@ const Router = createRouter({
 });
 
 Router.beforeEach((to, from) => {
-  if (to.path !== (customize.get() as Customize_Route).route) {
+  if (to.path !== (window.customize as Customize_Route).route) {
     //更新窗口路由
-    (customize.get() as Customize_Route).route = to.path;
-    windowUpdate();
+    (window.customize as Customize_Route).route = to.path;
+    customizeUpdate();
   }
 });
 
