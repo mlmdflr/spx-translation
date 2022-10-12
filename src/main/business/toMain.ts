@@ -27,6 +27,10 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
         }
     )
     const { height, width } = windowInstance.get(winId)?.getBounds()!
+
+    let googleReady = false
+    let deeplReady = false
+
     let googleVid = viewInstance.create({
         url: `https://translate.google.com/?sl=auto&hl=${lang}`,
         session: {
@@ -91,7 +95,8 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
                 clearInterval(sid)
               }
             },200)
-            `).catch(() => { })
+            `).catch(() => { });
+        (googleReady = true) && deeplReady && windowInstance.getMain()?.show()
     })
 
     //关闭创建新窗体
@@ -164,14 +169,20 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
                     opacity: ${json.ggopacity};
                 }
           `).catch(() => { });
+
+        googleReady && (deeplReady = true) && windowInstance.getMain()?.show()
     })
 
     pupImgApi(json.wifekeyword).then(res => {
         windowInstance.send('window-message-switch-background-back', res)
-        for (const view of viewInstance.getViewAll()) {
-            webContents.fromId(view.customize.id!).send('window-message-switch-background-json-back', json)
-        }
+        for (const view of viewInstance.getViewAll()) webContents.fromId(view.customize.id!).send('window-message-switch-background-json-back', json)
     })
+
+    setTimeout(() => {
+        if (!googleReady || !deeplReady) {
+            windowInstance.getMain()?.show()
+        }
+    }, 10000);
 }
 
 // 窗口注册

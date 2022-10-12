@@ -1,4 +1,4 @@
-import { ipcMain, Session, session as eleSess } from "electron"
+import { ipcMain, Session, session as eleSess, webContents, BrowserWindow } from "electron"
 import { logWrapper } from "@mlmdflr/electron-modules/main/log";
 import { getSearchCountApi, pupImgApi } from "../modular/pup"
 import { windowInstance } from '@mlmdflr/electron-modules/main/window';
@@ -39,19 +39,6 @@ export const renderOn = (...session: Session[]) => {
    */
   ipcMain.handle('updateCfg', (event, args) => {
     setCfg(args).then(res => {
-      windowInstance.get(0)?.webContents.insertCSS(`
-          .T4LgNb{
-            opacity: ${args.ggopacity};
-          }
-          .VfPpkd-Jh9lGc{
-            background: white;
-            opacity: ${args.ggopacity};
-          }
-          .goog-container-vertical{
-            opacity: ${args.ggopacity};
-          }
-      `);
-
       for (const view of viewInstance.getViewAll()) {
         switch (view.customize.session.key) {
           case 'google':
@@ -111,7 +98,7 @@ export const renderOn = (...session: Session[]) => {
     const main = windowInstance.getMain()
     if (main && main.fullScreen) {
       main.setFullScreen(false)
-    }else main?.setFullScreen(true)
+    } else main?.setFullScreen(true)
   })
 
   /**
@@ -132,12 +119,12 @@ export const renderOn = (...session: Session[]) => {
     return sum
   })
   //打开设置窗体
-  ipcMain.handle('open:window', async () => {
+  ipcMain.handle('open:window', async (event, _) => {
     windowInstance.create(
       {
         id: 1,
         route: '/configure',
-        parentId: 0,
+        parentId: BrowserWindow.fromWebContents(event.sender)?.customize.id,
         data: await getJson()
       },
       {

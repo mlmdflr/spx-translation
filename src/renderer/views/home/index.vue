@@ -9,13 +9,12 @@ import { ref, onMounted } from 'vue';
 
 let mainBody = ref<HTMLElement>()
 
-onMounted(() => {
-    windowShow(window.customize.id);
-});
+// onMounted(() => {
+//     windowShow(window.customize.id);
+// });
 
 windowMessageOn((_, url) => {
     console.log(url);
-    
     mainBody.value!.style.backgroundSize = '100%'
     mainBody.value!.style.backgroundPosition = 'center'
     mainBody.value!.style.backgroundImage = `url('${url}')`
