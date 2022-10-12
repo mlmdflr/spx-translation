@@ -1,8 +1,8 @@
 {
   "name": "spx-translation",
   "productName": "spx-translation",
-  "version": "2.0.0",
-  "description": "electron-vue3 和 谷歌翻译web 开发",
+  "version": "2.0.1",
+  "description": "聚会翻译程序  谷歌翻译与deepl对照",
   "main": "dist/js/main.js",
   "author": {
     "name": "没礼貌的芬兰人",

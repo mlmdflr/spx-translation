@@ -6,36 +6,6 @@ try {
         createHTML: (to_escape) => to_escape
     });
 
-    // 显示隐藏快捷键
-    window.ipc.on('window-blur-focus-0', (_, a) => {
-        if (document.querySelectorAll('.er8xn')[0]) document.querySelectorAll('.er8xn')[0].focus();
-        //快捷键注册
-        if (a !== 'blur') {
-            window.ipc.invoke('shortcut-unregister', 1).then(() => {
-                window.ipc.invoke('getCfg').then((json) => {
-                    window.ipc.invoke('shortcut-register', { id: 1, key: json.hotKey.showHied }).then(() => {
-                        window.ipc.removeAllListeners('shortcut-1-back')
-                        window.ipc.on(`shortcut-1-back`, () => {
-                            window.ipc.send('window-func', { type: 'blur', id: 0 });
-                            window.ipc.send('window-func', { type: 'hide', id: undefined });
-                        })
-                    })
-                })
-            })
-        } else {
-            window.ipc.invoke('shortcut-unregister', 1).then(() => {
-                window.ipc.invoke('getCfg').then((json) => {
-                    window.ipc.invoke('shortcut-register', { id: 1, key: json.hotKey.showHied }).then(() => {
-                        window.ipc.removeAllListeners('shortcut-1-back')
-                        window.ipc.on(`shortcut-1-back`, () => {
-                            window.ipc.send('window-func', { type: 'show', id: undefined });
-                        })
-                    })
-                })
-            })
-        }
-    })
-
 
     //文字按钮点击获焦
     document.querySelector('.cWQYBc').onclick = () => {

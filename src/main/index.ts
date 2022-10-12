@@ -4,18 +4,15 @@ import { windowInstance } from "@mlmdflr/electron-modules/main/window";
 import { Session } from '@mlmdflr/electron-modules/main/session';
 import { renderOn } from './business/toRenderer';
 import { windowRegister } from './business/toMain';
-import screenshots from "./business/screenshots";
-import tesseract from "./business/tesseract";
 import ico from '@/assets/icon/tray.png';
 import { join } from "path";
 import { readFile } from "@mlmdflr/electron-modules/main/file";
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 
 await appInstance.start();
 
 const dataUrl = 'data:image/png;base64,' + await readFile(join(__dirname, `../${ico}`), { encoding: 'base64' })
 TrayInstance.create(dataUrl);
-
 
 app.isPackaged && windowInstance.setDefaultCfg({
     defaultLoadUrl: join(__dirname, '../index.html'),
@@ -43,6 +40,3 @@ deeplSess.on()
 windowRegister()
 
 renderOn(dfSess.session, googleSess.session, deeplSess.session)
-
-screenshots()
-new tesseract().on()
