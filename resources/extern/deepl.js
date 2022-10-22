@@ -16,6 +16,18 @@ _button_refresh.onclick = () => window.ipc.invoke('switch-background');
 document.querySelector('.lmt__language_container_sec .lmt__targetLangMenu_extensions_container .lmt__targetLangMenu_extensions').appendChild(_button_refresh)
 
 
+
+let panelTranslateText = document.querySelector('#panelTranslateText')
+panelTranslateText.addEventListener('contextmenu', () => {
+    window.ipc.send('menu-show-deepl', window.getSelection().toString())
+})
+window.ipc.on('menu-paste-deepl', (_, args) => {
+    console.log(args);
+    let inputEvent = new Event('input');
+    document.querySelector('.lmt__textarea.lmt__source_textarea.lmt__textarea_base_style').value = args
+    document.querySelector('.lmt__textarea.lmt__source_textarea.lmt__textarea_base_style').dispatchEvent(inputEvent)
+})
+
 let index = 0
 const redesignId = setInterval(() => {
     index++; if (index === 10) clearInterval(redesignId);

@@ -7,12 +7,16 @@ import { windowRegister } from './business/toMain';
 import ico from '@/assets/icon/tray.png';
 import { join } from "path";
 import { readFile } from "@mlmdflr/electron-modules/main/file";
-import { app, ipcMain } from 'electron';
+import { app } from 'electron';
+
+import { menuOn } from "./business/menu";
 
 await appInstance.start();
 
 const dataUrl = 'data:image/png;base64,' + await readFile(join(__dirname, `../${ico}`), { encoding: 'base64' })
 TrayInstance.create(dataUrl);
+
+menuOn()
 
 app.isPackaged && windowInstance.setDefaultCfg({
     defaultLoadUrl: join(__dirname, '../index.html'),

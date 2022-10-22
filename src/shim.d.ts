@@ -10,7 +10,6 @@ declare module '*.vue' {
       customize: Customize_Route
     }
   }
-  
 }
 declare module '*.svg'
 declare module '*.png'

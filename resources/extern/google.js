@@ -7,12 +7,6 @@ try {
     });
 
 
-    //文字按钮点击获焦
-    document.querySelector('.cWQYBc').onclick = () => {
-        if (document.querySelectorAll('.er8xn')[0]) setTimeout(() => document.querySelectorAll('.er8xn')[0].focus(), 200);
-    }
-
-
     // 去除更翻译无关的 start
     let _z_QTmif = document.querySelector('.zQTmif');
     _z_QTmif.style = 'background: transparent';
@@ -147,6 +141,10 @@ try {
 
     _U0xwnf.appendChild(_b_utton6)
 
+    let T4LgNb = document.querySelector('.T4LgNb')
+    T4LgNb.addEventListener('contextmenu', () => {
+        window.ipc.send('menu-show-goole', window.getSelection().toString())
+    })
 
 } catch (e) {
     console.log(e);
