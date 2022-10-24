@@ -10,12 +10,14 @@ import { readFile } from "@mlmdflr/electron-modules/main/file";
 import { app } from 'electron';
 
 import { menuOn } from "./business/menu";
+import { shortcutsOn } from './business/shortcuts';
 
 await appInstance.start();
 
 const dataUrl = 'data:image/png;base64,' + await readFile(join(__dirname, `../${ico}`), { encoding: 'base64' })
 TrayInstance.create(dataUrl);
 
+shortcutsOn()
 menuOn()
 
 app.isPackaged && windowInstance.setDefaultCfg({

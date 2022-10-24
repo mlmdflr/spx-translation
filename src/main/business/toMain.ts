@@ -85,16 +85,7 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
                   }
           `).catch(() => { });
         googleView.webContents.executeJavaScript(`
-            document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
-            let sid =  setInterval(()=>{
-              if (document.styleSheets[6]) {
-                document.styleSheets[6].deleteRule(78)
-                document.styleSheets[6].deleteRule(79)
-                document.styleSheets[6].deleteRule(79)
-                document.styleSheets[6].insertRule('.ita-hwt-ime-st { position: fixed; box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; border: 1px solid rgb(204, 204, 204); transition: opacity 0.1s linear 0s; z-index: 2147483640; }',0)
-                clearInterval(sid)
-              }
-            },200)
+             document.styleSheets[3].insertRule('.RvYhPd::before {background: transparent;border-bottom: 1px solid rgba(0, 0, 0, 0.12);content: "";display: block;overflow: hidden;width: 100%;z-index: -1;position: absolute;top: 0;left: 0;}', 0); 
             `).catch(() => { });
         (googleReady = true) && deeplReady && windowInstance.getMain()?.show()
     })

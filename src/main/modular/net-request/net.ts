@@ -1,7 +1,7 @@
 /**
  * node-fetch的封转,可使用代理请求
  */
-import fetch, { Headers, RequestInit } from 'node-fetch';
+import fetch, { Headers } from 'node-fetch';
 import { AbortController as NodeAbortController } from 'node-abort-controller';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { SocksProxyAgent } from 'socks-proxy-agent';

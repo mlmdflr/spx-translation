@@ -1,7 +1,7 @@
 {
   "name": "spx-translation",
   "productName": "spx-translation",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "聚会翻译程序  谷歌翻译与deepl对照",
   "main": "dist/js/main.js",
   "author": {
@@ -14,6 +14,7 @@
     "erf": "electron-rebuild -f",
     "updcfg": "node scripts/cfg.js",
     "build": "node scripts/cfg.js && node scripts/build.js",
+    "upgrade": "yarn upgrade-interactive --latest",
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {

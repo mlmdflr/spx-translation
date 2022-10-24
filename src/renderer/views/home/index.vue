@@ -15,9 +15,9 @@ let mainBody = ref<HTMLElement>()
 
 windowMessageOn((_, url) => {
     console.log(url);
-    mainBody.value!.style.backgroundSize = '100%'
-    mainBody.value!.style.backgroundPosition = 'center'
-    mainBody.value!.style.backgroundImage = `url('${url}')`
+    mainBody.value!.style.backgroundSize = '100%';
+    mainBody.value!.style.backgroundPosition = 'center';
+    mainBody.value!.style.backgroundImage = `url('${url}')`;
 }, 'switch-background')
 
 </script>
