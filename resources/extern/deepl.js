@@ -8,6 +8,12 @@ document.querySelector('#lmt_pro_ad_container') && document.querySelector('#lmt_
 document.querySelector('div.dl_body--redesign.dl_top_element--wide.dl_visible_desktop_only.eSEOtericText') && document.querySelector('div.dl_body--redesign.dl_top_element--wide.dl_visible_desktop_only.eSEOtericText').remove();
 document.querySelector('div#dl_quotes_container') && document.querySelector('div#dl_quotes_container').remove();
 document.querySelector('div.dl_footerV2_container') && document.querySelector('div.dl_footerV2_container').remove();
+//弹窗广告
+document.querySelector('.lmt_targetToolbar__appPromotion_container_container') && document.querySelector('.lmt_targetToolbar__appPromotion_container_container').remove();
+//反馈按钮
+document.querySelector('div[dl-test=feedback-button-container]') && document.querySelector('div[dl-test=feedback-button-container]').remove();
+
+
 
 let _button_refresh = document.createElement('div');
 _button_refresh.className = 'lmt__targetLangMenu_extension glossary show';
