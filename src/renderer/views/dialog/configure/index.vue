@@ -142,8 +142,8 @@ function deeplLangChange(val: string) {
   restShow.value = true
 }
 
-function testWifekeyword() {
-  const count = window.ipc.sendSync('get-search-count', wifekeyword.value);
+async function testWifekeyword() {
+  const count = await window.ipc.invoke('get-search-count', wifekeyword.value);
   if (count) {
     ElNotification({
       title: '搜索成功',

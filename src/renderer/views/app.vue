@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition :name="route.meta.transition || 'fade'" mode="out-in">
+    <transition :name="route.meta.transition as string || 'fade'" mode="out-in">
       <keep-alive :include="keepAliveData.include" :exclude="keepAliveData.exclude" :max="keepAliveData.max"
         :key="route.meta['usePathKey'] ? route.path : undefined">
         <component :is="Component" />

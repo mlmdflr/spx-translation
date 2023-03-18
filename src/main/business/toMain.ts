@@ -16,7 +16,6 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
             isMainWin: true,
             currentHeight: 1420,
             currentWidth: 800,
-            viewType: 'Multiple'
         },
         {
             width: 1420,
@@ -164,7 +163,7 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
         googleReady && (deeplReady = true) && windowInstance.getMain()?.show()
     })
 
-    pupImgApi(json.wifekeyword).then(res => {
+    pupImgApi(json.wifekeyword, json.proxy.open ? json.proxy : undefined).then(res => {
         windowInstance.send('window-message-switch-background-back', res)
         for (const view of viewInstance.getViewAll()) webContents.fromId(view.customize.id!).send('window-message-switch-background-json-back', json)
     })
@@ -188,6 +187,9 @@ export async function windowRegister() {
         proxyRules: `${json.proxy.type}://${json.proxy.ip_dn}:${json.proxy.port}`
     })
     json.proxy.open && deeplSess.setProxy({
+        proxyRules: `${json.proxy.type}://${json.proxy.ip_dn}:${json.proxy.port}`
+    })
+    json.proxy.open && session.defaultSession.setProxy({
         proxyRules: `${json.proxy.type}://${json.proxy.ip_dn}:${json.proxy.port}`
     })
     session.defaultSession.setUserAgent(json.userAgent)

@@ -1,23 +1,16 @@
 <template>
     <div ref="mainBody" class="main-body">
+        <img class="main-body" style="object-fit: cover;" :src="refBase64">
     </div>
 </template>
 
 <script setup lang="ts">
-import { windowMessageOn, windowShow } from '@mlmdflr/electron-modules/renderer/window';
-import { ref, onMounted } from 'vue';
+import { windowMessageOn } from '@mlmdflr/electron-modules/renderer/window';
+import { ref } from 'vue';
 
-let mainBody = ref<HTMLElement>()
-
-// onMounted(() => {
-//     windowShow(window.customize.id);
-// });
-
-windowMessageOn((_, url) => {
-    console.log(url);
-    mainBody.value!.style.backgroundSize = '100%';
-    mainBody.value!.style.backgroundPosition = 'center';
-    mainBody.value!.style.backgroundImage = `url('${url}')`;
+let refBase64 = ref('')
+windowMessageOn((_, base64) => {
+    refBase64.value = `data:image/png;base64,${base64}`
 }, 'switch-background')
 
 </script>

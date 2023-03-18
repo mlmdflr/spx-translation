@@ -19,7 +19,7 @@ export const renderOn = (...session: Session[]) => {
    */
   ipcMain.handle('switch-background', async (event, args) => {
     getJson().then(json => {
-      pupImgApi(json.wifekeyword).then(res => {
+      pupImgApi(json.wifekeyword, json.proxy.open ? json.proxy : undefined).then(res => {
         windowInstance.send('window-message-switch-background-back', res)
         for (const view of viewInstance.getViewAll()) view.webContents.send('window-message-switch-background-json-back', json)
       })
@@ -29,8 +29,9 @@ export const renderOn = (...session: Session[]) => {
   /**
    * 向渲染进程提供搜索关键字背景图片的数量
    */
-  ipcMain.on('get-search-count', async (event, args) => {
-    event.returnValue = await getSearchCountApi(args)
+  ipcMain.handle('get-search-count', async (event, args) => {
+   let json = await getJson()
+    return await getSearchCountApi(args, json.proxy.open ? json.proxy : undefined)
   })
 
 

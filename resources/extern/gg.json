@@ -1,1 +1,16 @@
-{"wifekeyword":"lesbian","ggopacity":0.8,"winopacity":1,"default":0,"htmlLang":"zh-CN","deeplHtmlLang":"zh","webOpenmMode":"electron","proxy":{"ip_dn":"127.0.0.1","port":10808,"type":"SOCKS5","open":true},"userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"}
+{
+    "wifekeyword": "lesbian",
+    "ggopacity": 0.8,
+    "winopacity": 1,
+    "default": 0,
+    "htmlLang": "zh-CN",
+    "deeplHtmlLang": "zh",
+    "webOpenmMode": "electron",
+    "proxy": {
+        "ip_dn": "127.0.0.1",
+        "port": 10808,
+        "type": "SOCKS5",
+        "open": false
+    },
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+}
