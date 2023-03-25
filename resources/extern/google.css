@@ -23,3 +23,15 @@
   -webkit-app-region: no-drag;
 }
 
+.U0xwnf::after {
+  background: linear-gradient(to right,rgba(250,250,250,0),rgb(250,250,250));
+  bottom: 0;
+  content: "";
+  pointer-events: none;
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 32px;
+  height: 52px
+}
