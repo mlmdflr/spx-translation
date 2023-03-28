@@ -107,6 +107,12 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
                             partition: 'persist:google'
                         }
                     })
+                    windowInstance.get(id)?.webContents.on('did-finish-load', async () => {
+                        windowInstance.get(id)?.webContents.executeJavaScript(`
+                            ${await readFile(resourcesPathGet("extern", 'vanilla-back-to-top.js'))} 
+                            console.log(1);
+                        `)
+                    })
                 } else shell.openExternal(details.url);
             })
         }
@@ -161,6 +167,10 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
           `).catch(() => { });
 
         googleReady && (deeplReady = true) && windowInstance.getMain()?.show()
+    })
+
+    deeplView.webContents.setWindowOpenHandler((_: HandlerDetails): { action: "deny" } => {
+        return { action: "deny" }
     })
 
     pupImgApi(json.wifekeyword, json.proxy.open ? json.proxy : undefined).then(res => {

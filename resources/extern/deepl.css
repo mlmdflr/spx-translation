@@ -8,26 +8,23 @@
 
 *::-webkit-scrollbar {
     /*滚动条整体样式*/
-    width: 5px;
-    /*高宽分别对应横竖滚动条的尺寸*/
-    height: 5px;
-}
-
-*::-webkit-scrollbar-thumb {
+    width: 0px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 0px;
+  }
+  
+  *::-webkit-scrollbar-thumb {
     /*滚动条里面小方块*/
     /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);*/
-    backdrop-filter: blur(10px);
-    background: rgba(0, 0, 0, 0.3);
-}
-
-*::-webkit-scrollbar-track {
+    backdrop-filter: blur(0px);
+  }
+  *::-webkit-scrollbar-track {
     /*滚动条里面轨道*/
     /*-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);*/
     background: transparent;
-}
-
-#dl_translator{
-  -webkit-app-region: drag;
+  }
+  
+#dl_translator {
+    -webkit-app-region: drag;
 }
 
 .lmt__docTrans-tab-container {
@@ -42,6 +39,14 @@
     -webkit-app-region: no-drag;
 }
 
-#back-to-top{
+#back-to-top {
+    -webkit-app-region: no-drag;
+}
+
+#panelTranslateFiles {
+    -webkit-app-region: no-drag;
+}
+
+#lmt__dict_container{
     -webkit-app-region: no-drag;
 }

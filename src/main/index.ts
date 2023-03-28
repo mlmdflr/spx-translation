@@ -7,7 +7,7 @@ import { windowRegister } from './business/toMain';
 import ico from '@/assets/icon/tray.png';
 import { join } from "path";
 import { readFile } from "@mlmdflr/electron-modules/main/file";
-import { app } from 'electron';
+import { Menu, app } from 'electron';
 
 import { menuOn } from "./business/menu";
 import { shortcutsOn } from './business/shortcuts';
@@ -16,6 +16,20 @@ await appInstance.start();
 
 const dataUrl = 'data:image/png;base64,' + await readFile(join(__dirname, `../${ico}`), { encoding: 'base64' })
 TrayInstance.create(dataUrl);
+//托盘设置
+TrayInstance.main?.setContextMenu(Menu.buildFromTemplate([
+    { label: '显示', type: 'normal', click: () => windowInstance.getMain()?.show() },
+    { label: '隐藏', type: 'normal', click: () => windowInstance.getMain()?.hide() },
+    {
+        label: '重启', type: 'normal', click: () => {
+            app.relaunch({ args: process.argv.slice(1) });
+            app.exit(0);
+        }
+    },
+    {
+        label: '退出', type: 'normal', click: () => app.exit(0)
+    },
+]))
 
 shortcutsOn()
 menuOn()
