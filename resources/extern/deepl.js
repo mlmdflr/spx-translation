@@ -12,6 +12,7 @@ document.querySelector('div.dl_footerV2_container') && document.querySelector('d
 // document.querySelector('.lmt_targetToolbar__appPromotion_container_container') && document.querySelector('.lmt_targetToolbar__appPromotion_container_container').remove();
 //反馈按钮
 document.querySelector('div[dl-test=feedback-button-container]') && document.querySelector('div[dl-test=feedback-button-container]').remove();
+document.querySelector('div[data-testid=feedback-button-container]')&& document.querySelector('div[data-testid=feedback-button-container]').remove();
 
 
 
