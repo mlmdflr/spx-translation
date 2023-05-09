@@ -5,11 +5,14 @@
     <div class="message-info">
       <ElDivider content-position="left">设置老婆关键字</ElDivider>
       <ElRow :gutter="30">
-        <ElCol :span="16">
+        <ElCol :span="14">
           <ElInput :maxlength="10" v-model="wifekeyword"></ElInput>
         </ElCol>
         <ElCol :span="4" :offset="2">
-          <ElButton plain size="small" @click="testWifekeyword">搜索</ElButton>
+          <ElButton plain size="small" @click="testWifekeyword">测试搜索</ElButton>
+        </ElCol>
+        <ElCol :span="4">
+          <!-- <ElButton type="text" plain size="small" @click="setProxy">设置代理</ElButton> -->
         </ElCol>
       </ElRow>
       <ElDivider content-position="left">设置透明度</ElDivider>
@@ -159,6 +162,10 @@ async function testWifekeyword() {
       type: 'error'
     });
   }
+}
+
+function setProxy() {
+  
 }
 
 onMounted(() => {
