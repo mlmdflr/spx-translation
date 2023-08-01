@@ -12,7 +12,12 @@ document.querySelector('div.dl_footerV2_container') && document.querySelector('d
 // document.querySelector('.lmt_targetToolbar__appPromotion_container_container') && document.querySelector('.lmt_targetToolbar__appPromotion_container_container').remove();
 //反馈按钮
 document.querySelector('div[dl-test=feedback-button-container]') && document.querySelector('div[dl-test=feedback-button-container]').remove();
-document.querySelector('div[data-testid=feedback-button-container]')&& document.querySelector('div[data-testid=feedback-button-container]').remove();
+document.querySelector('div[data-testid=feedback-button-container]') && document.querySelector('div[data-testid=feedback-button-container]').remove();
+
+//写作页
+document.querySelector('div[id=dl_write_banner_container]') && document.querySelector('div[id=dl_write_banner_container]').remove();
+document.querySelector('div[id=dl_translator]') && document.querySelector('div[id=dl_translator]').remove();
+document.querySelector('div[id=dl_write_header_container]') && document.querySelector('div[id=dl_write_header_container]').remove();
 
 
 
@@ -26,7 +31,8 @@ document.querySelector('.lmt__language_container_sec .lmt__targetLangMenu_extens
 
 let panelTranslateText = document.querySelector('#panelTranslateText')
 panelTranslateText.addEventListener('contextmenu', () => {
-    window.ipc.send('menu-show-deepl', window.getSelection().toString())
+    window.location.href.endsWith(`translator`) && window.ipc.send('menu-show-deepl', window.getSelection().toString())
+    window.location.href.endsWith(`write`) && window.ipc.send('menu-show-deepl-come-back', window.getSelection().toString())
 })
 window.ipc.on('menu-paste-deepl', (_, args) => {
     console.log(args);

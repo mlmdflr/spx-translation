@@ -50,7 +50,7 @@ module.exports = {
         test: /\.(png|svg|jpg|gif|ico|woff|woff2|eot|ttf|otf)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'static/[hash][ext][query]'
+          filename: 'web/static/[hash][ext][query]'
         }
       },
       {

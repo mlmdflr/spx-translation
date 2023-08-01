@@ -37,7 +37,9 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
             cache: true,
             persistence: true
         }
-    }, {})
+    }, {
+        devTools: true
+    })
     let googleView = viewInstance.getView(googleVid)!;
     viewInstance.bindBV(windowInstance.get(winId)!, googleView, {
         x: 0, y: 0, height, width: width - 700
@@ -128,7 +130,9 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
             cache: true,
             persistence: true
         }
-    }, {}, {
+    }, {
+        devTools: true
+    }, {
         x: 720, y: 0, height, width: width - 720
     })
 
@@ -169,7 +173,9 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
         googleReady && (deeplReady = true) && windowInstance.getMain()?.show()
     })
 
-    deeplView.webContents.setWindowOpenHandler((_: HandlerDetails): { action: "deny" } => {
+    deeplView.webContents.setWindowOpenHandler((details: HandlerDetails): { action: "deny" } => {
+        //写作页
+        details.url === 'https://www.deepl.com/write' && deeplView.webContents.loadURL(details.url)
         return { action: "deny" }
     })
 

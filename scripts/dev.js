@@ -51,7 +51,7 @@ async function startMain() {
 }
 
 function startElectron() {
-  let args = ['dist/js/main.js'];
+  let args = ['dist/electron/main.js'];
   if (process.env.npm_execpath.endsWith('yarn.js')) {
     args = args.concat(process.argv.slice(3));
   } else if (process.env.npm_execpath.endsWith('npm-cli.js')) {

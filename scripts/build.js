@@ -7,6 +7,7 @@ const builder = require('electron-builder');
 const buildConfig = require('../resources/build/cfg/build.json');
 const main = require('./webpack.main.config'); //主进程
 const renderer = require('./webpack.renderer.config'); //子进程
+const bytecode = require('./buildCode');
 let [, , arch, _notP] = process.argv;
 
 const optional = [
@@ -83,6 +84,7 @@ async function core(arch) {
   arch = arch.trim();
   let archTag = '';
   let archPath = '';
+  let bytecodePack = true;
   switch (arch) {
     case 'web':
       await rendererBuild();
@@ -103,6 +105,8 @@ async function core(arch) {
         if (arch.length === 3) bv.arch = ['x64', 'ia32'];
         else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
         else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
+        bv.arch.length === 2 && (bytecodePack = false)
+        bv.arch.length === 1 && bv.arch[0] !== process.arch && (bytecodePack = false)
         buildConfig.win.target = [bv];
       }
       if (arch.startsWith('winp')) {
@@ -113,6 +117,8 @@ async function core(arch) {
         if (arch.length === 4) bv.arch = ['x64', 'ia32'];
         else if (arch.indexOf('32') > -1) bv.arch = ['ia32'];
         else if (arch.indexOf('64') > -1) bv.arch = ['x64'];
+        bv.arch.length === 2 && (bytecodePack = false)
+        bv.arch.length === 1 && bv.arch[0] !== process.arch && (bytecodePack = false)
         buildConfig.win.target = [bv];
       }
       break;
@@ -149,16 +155,19 @@ async function core(arch) {
   } catch (err) { }
   fs.writeFileSync('./resources/build/cfg/build.json', JSON.stringify(buildConfig, null, 2)); //写入配置
   deleteFolderRecursive(path.resolve('dist')); //清除dist
-  console.log('\x1B[34m[build start]\x1B[0m');
-  webpack([{ ...main('production') }, { ...renderer('production') }], (err, stats) => {
+  console.log('\x1B[34m[electron build start]\x1B[0m');
+  webpack([{ ...main('production') }, { ...renderer('production') }], async (err, stats) => {
     if (err || stats.hasErrors()) throw err;
+    if (bytecodePack) await bytecode()
+    else console.warn('[Build]', `Unable to do bytecode build in cross-compile.`);
+    buildConfig.productName = buildConfig.productName + '-' + arch
     builder
       .build({
         targets: archTag,
         config: buildConfig
       })
       .then(() => {
-        console.log('\x1B[32m[build success] \x1B[0m');
+        console.log('\x1B[32m[electron build success] \x1B[0m');
       })
       .catch((error) => {
         console.error(error);

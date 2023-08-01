@@ -17,8 +17,8 @@ module.exports = (env) => {
       app: './src/renderer/index.ts'
     },
     output: {
-      filename: './js/[name].v.js',
-      chunkFilename: './js/[id].v.js',
+      filename: './web/[name].renderer.js',
+      chunkFilename: './web/[id].renderer.js',
       path: resolve('dist')
     },
     resolve: {

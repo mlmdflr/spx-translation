@@ -14,7 +14,7 @@ module.exports = (env) => {
       'preload.url': './src/main/preload/index.url.ts'
     },
     output: {
-      filename: './js/[name].js',
+      filename: './electron/[name].js',
       path: resolve('dist')
     },
     optimization: {
