@@ -25,19 +25,15 @@
     background: transparent;
 }
 
-#dl_translator {
+#___gatsby {
     -webkit-app-region: drag;
 }
 
-.lmt__docTrans-tab-container {
+#headlessui-tabs-panel-7{
     -webkit-app-region: no-drag;
 }
 
-.lmt__sides_container {
-    -webkit-app-region: no-drag;
-}
-
-#lmt__dict {
+.flex.flex-row{
     -webkit-app-region: no-drag;
 }
 
@@ -45,10 +41,3 @@
     -webkit-app-region: no-drag;
 }
 
-#panelTranslateFiles {
-    -webkit-app-region: no-drag;
-}
-
-#lmt__dict_container {
-    -webkit-app-region: no-drag;
-}

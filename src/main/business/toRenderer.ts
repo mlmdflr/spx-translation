@@ -66,6 +66,9 @@ export const renderOn = (...session: Session[]) => {
               .modal--l9GBM.noScroll--XcXwq.modal--HdqMl{
                   opacity: ${args.ggopacity};
               }
+              #panelTranslateText{
+                opacity: ${args.ggopacity};
+            }
           `)
             break;
           default:

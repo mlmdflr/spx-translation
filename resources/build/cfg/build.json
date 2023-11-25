@@ -90,13 +90,6 @@
       "filter": [
         "**/*"
       ]
-    },
-    {
-      "from": "resources/platform/win32",
-      "to": "platform/win32",
-      "filter": [
-        "**/*"
-      ]
     }
   ],
   "afterPack": "scripts/buildAfterPack.js"

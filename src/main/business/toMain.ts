@@ -162,10 +162,10 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
         // 首次注入css
         deeplView.webContents.insertCSS(`
                 ${await readFile(resourcesPathGet("extern", 'deepl.css'))}
-                #dl_translator{
+                .space-y-6{
                     opacity: ${json.ggopacity};
                 }
-                .modal--l9GBM.noScroll--XcXwq.modal--HdqMl{
+                #panelTranslateText{
                     opacity: ${json.ggopacity};
                 }
           `).catch(() => { });
@@ -181,7 +181,7 @@ export async function globalization(lang: GoogleTranslate.desiredLang, deeplLang
 
     pupImgApi(json.wifekeyword, json.proxy.open ? json.proxy : undefined).then(res => {
         windowInstance.send('window-message-switch-background-back', res)
-        for (const view of viewInstance.getViewAll()) webContents.fromId(view.customize.id!).send('window-message-switch-background-json-back', json)
+        for (const view of viewInstance.getViewAll()) webContents.fromId(view.customize.id!)!.send('window-message-switch-background-json-back', json)
     })
 
     setTimeout(() => {
